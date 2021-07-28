@@ -1,24 +1,36 @@
-const puppeteer = require('puppeteer');
+const axios = require('axios');
+require('dotenv').config();
 
-const getStats = async (args) => {
+/*
+PR: https://api.fortnitetracker.com/v1/powerrankings/pc/naw/zd zas
+
+*/
+
+const getAllStats = async (epic) => {
 	//first reduce all args to one variable
-	let user = convertCommandToValidUser(args);
-	let url = `https://tracker.gg/valorant/profile/riot/${user}/overview`;
+	//let epic = convertCommandToValidUser(args);
+	console.log(epic);
+	let platform = 'pc';
+	let region = 'naw';
+	let url = `https://api.fortnitetracker.com/v1/powerrankings/${platform}/${region}/${encodeURI(epic)}`;
+	console.log(url);
 
-	let page = await configureBrowser(url);
-	console.log(page);
+	const {data} = await axios
+		.get(url, {
+			headers: {
+				'TRN-Api-key': process.env.TRN_API_KEY,
+			},
+		})
+		.catch((err) => {
+			console.log('requesting data error:', err);
+		});
 
-	const text = await page.evaluate(() => document.body.innerHTML);
-	console.log(text);
-	return text;
+	//console.log(res);
+
+	return data;
 };
 
-const configureBrowser = async (url) => {
-	const browser = await puppeteer.launch({ignoreDefaultArgs: ['--disable-extensions']});
-	const page = await browser.newPage();
-	await page.goto(url);
-	return page;
-};
+const configureBrowser = async (url) => {};
 
 const convertCommandToValidUser = (args) => {
 	let user = '';
@@ -42,4 +54,4 @@ const convertCommandToValidUser = (args) => {
 	return user;
 };
 
-exports.getStats = getStats;
+exports.getAllStats = getAllStats;
