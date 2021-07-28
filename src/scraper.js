@@ -3,17 +3,16 @@ require('dotenv').config();
 
 /*
 PR: https://api.fortnitetracker.com/v1/powerrankings/pc/naw/zd zas
-
 */
+
+const PLATFORM = 'pc';
+const REGION = 'naw';
 
 const getAllStats = async (epic) => {
 	//first reduce all args to one variable
 	//let epic = convertCommandToValidUser(args);
 	console.log(epic);
-	let platform = 'pc';
-	let region = 'naw';
-	let url = `https://api.fortnitetracker.com/v1/powerrankings/${platform}/${region}/${encodeURI(epic)}`;
-	console.log(url);
+	let url = `https://api.fortnitetracker.com/v1/powerrankings/${PLATFORM}/${REGION}/${encodeURI(epic)}`;
 
 	const {data} = await axios
 		.get(url, {
@@ -30,7 +29,73 @@ const getAllStats = async (epic) => {
 	return data;
 };
 
+const getPr = async (epic) => {
+	let platform = 'pc';
+	let region = 'naw';
+	let url = `https://api.fortnitetracker.com/v1/powerrankings/${PLATFORM}/${REGION}/${encodeURI(epic)}`;
+	console.log(url);
+
+	const {data} = await axios
+		.get(url, {
+			headers: {
+				'TRN-Api-key': process.env.TRN_API_KEY,
+			},
+		})
+		.catch((err) => {
+			console.log('requesting data error:', err);
+		});
+
+	//console.log(res);
+
+	return data.points;
+};
+
+const getEarnings = async (epic) => {
+	let platform = 'pc';
+	let region = 'naw';
+	let url = `https://api.fortnitetracker.com/v1/powerrankings/${PLATFORM}/${REGION}/${encodeURI(epic)}`;
+	console.log(url);
+
+	const {data} = await axios
+		.get(url, {
+			headers: {
+				'TRN-Api-key': process.env.TRN_API_KEY,
+			},
+		})
+		.catch((err) => {
+			console.log('requesting data error:', err);
+		});
+
+	//console.log(res);
+
+	return data.cashPrize;
+};
+
+const getEvents = async (epic) => {
+	let platform = 'pc';
+	let region = 'naw';
+	let url = `https://api.fortnitetracker.com/v1/powerrankings/${PLATFORM}/${REGION}/${encodeURI(epic)}`;
+	console.log(url);
+
+	const {data} = await axios
+		.get(url, {
+			headers: {
+				'TRN-Api-key': process.env.TRN_API_KEY,
+			},
+		})
+		.catch((err) => {
+			console.log('requesting data error:', err);
+		});
+
+	//console.log(res);
+
+	return data.events;
+};
+
 const configureBrowser = async (url) => {};
+
+/*
+lol use encodeURI() 
 
 const convertCommandToValidUser = (args) => {
 	let user = '';
@@ -53,5 +118,9 @@ const convertCommandToValidUser = (args) => {
 
 	return user;
 };
+*/
 
 exports.getAllStats = getAllStats;
+exports.getPr = getPr;
+exports.getEarnings = getEarnings;
+exports.getEvents = getEvents;

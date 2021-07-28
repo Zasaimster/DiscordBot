@@ -2,7 +2,7 @@ require('dotenv').config();
 const {last} = require('cheerio/lib/api/traversing');
 const {Client} = require('discord.js');
 
-const {getAllStats} = require('./scraper');
+const {getAllStats, getPr, getEarnings, getEvents} = require('./scraper');
 
 const client = new Client();
 
@@ -21,27 +21,50 @@ client.on('message', async (message) => {
 	//const [CMD, ...args] = message.content.trim().substring(PREFIX.length).split(' ', 2);
 	let msg = message.content.trim();
 	const CMD = msg.substr(PREFIX.length, msg.indexOf(' ') - 1);
+	const [game, cmd] = interpretGame(CMD);
 	const args = msg.substr(msg.indexOf(' ') + 1);
-	console.log(CMD);
 
-	if (CMD === 'stats') {
-		//if there's a space in a person's username then reduce it down
-		console.log('in stats');
-		const stats = await getAllStats(args);
-		const {region, name, platform, points, cashPrize, events, rank} = stats;
-		console.log(stats);
-		let res = `Name: ${name}
-Region: ${region}
-Platform: ${platform}
-PR: ${convertPRToReadableString(points)}
-Rank: #${rank}
-Earnings: $${cashPrize}
-Events: ${events}`;
-		//console.log();
-		message.channel.send(prettifyFNStats(stats));
+	if (game === 'fn') {
+		if (cmd === 'Stats') {
+			const stats = await getAllStats(args);
+			if (stats.status) {
+				message.channel.send(stats.status);
+			} else {
+				message.channel.send(prettifyFNStats(stats));
+			}
+		}
+
+		if (cmd === 'Pr') {
+			const stats = await getPr(args);
+			if (stats.status) {
+				message.channel.send(stats.status);
+			} else {
+				message.channel.send(convertPRToReadableString(stats));
+			}
+		}
+
+		if (cmd === 'Earnings') {
+			const stats = await getEarnings(args);
+			if (stats.status) {
+				message.channel.send(stats.status);
+			} else {
+				message.channel.send(`$${stats}`);
+			}
+		}
+
+		if (cmd === 'Events') {
+			const stats = await getEvents(args);
+			if (stats.status) {
+				message.channel.send(stats.status);
+			} else {
+				message.channel.send(stats);
+			}
+		}
+
+		if (cmd === 'Tracker') {
+			message.channel.send(`https://fortnitetracker.com/profile/all/${encodeURI(args)}/events`);
+		}
 	}
-
-	//message.channel.send('this is a command');
 });
 
 const convertPRToReadableString = (pr) => {
@@ -53,7 +76,7 @@ const prettifyFNStats = ({region, name, platform, points, cashPrize, events, ran
 	lines.push(`Name: ${name}`);
 	lines.push(`Region: ${region}`);
 	lines.push(`Platform: ${platform}`);
-	lines.push(`PR: ${points}`);
+	lines.push(`PR: ${convertPRToReadableString(points)}`);
 	lines.push(`Rank: ${rank}`);
 	lines.push(`Earnings: ${cashPrize}`);
 	lines.push(`Events: ${events}`);
@@ -95,4 +118,15 @@ const getSpaces = (index) => {
 		default:
 			return 7;
 	}
+};
+
+const interpretGame = (CMD) => {
+	if (CMD.substr(0, 2) === 'fn') {
+		return ['fn', CMD.substr(2)];
+	}
+	if (CMD.substr(0, 2) === 'val') {
+		return ['val', CMD.substr(3)];
+	}
+
+	return 'invalid';
 };
