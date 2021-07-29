@@ -21,29 +21,25 @@ client.on('ready', () => {
 
 client.on('message', async (message) => {
 	if (!message.content.startsWith(PREFIX) || message.author.bot) return;
-	console.log('hello?');
 
-	//const [CMD, ...args] = message.content.trim().substring(PREFIX.length).split(' ', 2);
 	let msg = message.content.trim();
-	const CMD = msg.substr(PREFIX.length, msg.indexOf(' ') - 1);
+	const CMD = msg.indexOf(' ') === -1 ? msg.substr(PREFIX.length) : msg.substr(PREFIX.length, msg.indexOf(' ') - 1);
 	const [game, cmd] = interpretGame(CMD);
 	const args = msg.substr(msg.indexOf(' ') + 1);
-	console.log(game);
 
 	if (game === 'fn') {
 		const msg = await handleFnRequest(cmd, args);
 		message.channel.send(msg);
 	}
 
+	console.log(game, cmd);
 	if (game == 'val') {
-		console.log('val');
 		const msg = await handleValRequest(cmd, args);
 		message.channel.send(msg);
 	}
 });
 
 const interpretGame = (CMD) => {
-	console.log(CMD);
 	if (CMD.substr(0, 2) === 'fn') {
 		return ['fn', CMD.substr(2)];
 	}
