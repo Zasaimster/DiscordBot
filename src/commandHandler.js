@@ -57,10 +57,7 @@ const handleRegistration = async (message) => {
 		message.channel.send('Check DMs!');
 
 		message.member.send('Time to register your stuff!').then((msg) => {
-			msg.react('a70363c477e7d0875631634ef277da9c');
-			//discord.com/assets/a70363c477e7d0875631634ef277da9c.svg
-			//https://discord.com/assets/197cdfb70e6835c81cbb1af86ab7e01e.svg
-			https: msg.react(':regional_indicator_f:');
+			msg.react('🇫').then(() => msg.react('🇻'));
 		});
 		member.createDM('hello');
 	}

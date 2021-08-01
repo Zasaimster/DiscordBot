@@ -24,6 +24,10 @@ client.on('ready', () => {
 	client.user.setActivity('Zas');
 });
 
+const emoji = client.emojis.cache.get('a70363c477e7d0875631634ef277da9c');
+
+console.log(`${emoji}`);
+
 const commandHandler = require('./commandHandler');
 
 client.on('message', commandHandler);
