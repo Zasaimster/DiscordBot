@@ -2,11 +2,11 @@
   "name": "discordbot",
   "version": "1.0.0",
   "description": "��b\u0000o\u0000t\u0000\r\u0000 \u0000",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/bot.js",
-    "dev": "CHOKIDAR_USEPOLLING=true nodemon ./src/bot.js"
+    "start": "node ./src/index.js",
+    "dev": "CHOKIDAR_USEPOLLING=true nodemon ./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
     "cheerio": "^1.0.0-rc.10",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
+    "firebase-admin": "^9.11.0",
     "nodemon": "^2.0.12",
     "puppeteer": "^10.1.0"
   }
