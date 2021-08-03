@@ -1,5 +1,5 @@
 const {convertPRToReadableString, prettifyFNStats} = require('../helper/functions');
-const getFnStats = require('../scrapers/fnScraper');
+const {getFnStats} = require('../scrapers/fnScraper');
 
 const handleFnRequest = async (cmd, args) => {
 	const stats = await getFnStats(args);

@@ -1,4 +1,4 @@
-const getValStats = require('../scrapers/valScraper');
+const {getValStats} = require('../scrapers/valScraper');
 
 const handleValRequest = async (cmd, args) => {
 	console.log(cmd);
