@@ -1,66 +1,66 @@
 const {getValStats} = require('../scrapers/valScraper');
 
-const handleValRequest = async (cmd, args) => {
-	console.log(cmd);
-	if (cmd === 'Help') {
+const handleValRequest = async (cmd, ign) => {
+	if (cmd === 'help') {
 		console.log('help');
 		let commands =
-			'valStats, valDamagePerRound, valKD, valKAD, valLast20Acc, valLast20, valHS%, valWin%, valTopAgentInfo, valTop3AgentsInfo, valTopAgent, valTop3Agents, valTracker, valTopWeapons, valTopWeaponsInfo';
+			'-val stats, -val damagePerRound, -val kd, -val kad, -val last20acc, -val last20, -val hs%, -val win%, -val topAgentInfo, -val top3AgentsInfo, -val topAgent, -val top3Agents, -val tracker, -val topWeapons, -val topWeaponsInfo';
+
 		return commands;
 	}
 
-	const res = await getValStats(args);
-	const stats = res.data.data[0].stats;
+	//const res = await getValStats(args);
+	//const stats = res.data.data[0].stats;
 	if (res.status !== 200) {
 		return res.status;
 	}
 
-	if (cmd === 'Stats') {
+	if (cmd === 'stats') {
 		//figure this one out
 		//return res[0].stats;
 		return 'work in progress';
 	}
-	if (cmd === 'DamagePerRound') {
+	if (cmd === 'damagePerRound') {
 		return stats.damagePerRound.displayValue;
 	}
-	if (cmd === 'KD') {
+	if (cmd === 'kd') {
 		return stats.kDRatio.displayValue;
 	}
-	if (cmd === 'KAD') {
+	if (cmd === 'kad') {
 		return stats.kADRatio.displayValue;
 	}
-	if (cmd === 'Last20Acc') {
+	if (cmd === 'last20acc') {
 		return 'work in progress';
 	}
-	if (cmd === 'Last20') {
+	if (cmd === 'last20') {
 		return 'work in progress';
 	}
-	if (cmd === 'HS%') {
+	if (cmd === 'hs%') {
 		return `${stats.headshotsPercentage.displayValue}%`;
 	}
-	if (cmd === 'Win%') {
+	if (cmd === 'win%') {
 		return stats.matchesWinPct.displayValue;
 	}
-	if (cmd === 'TopAgentInfo') {
+	if (cmd === 'topAgentInfo') {
 		return 'work in progress';
 	}
-	if (cmd === 'Top3AgentsInfo') {
+	if (cmd === 'top3AgentsInfo') {
 		return 'work in progress';
 	}
-	if (cmd === 'TopAgent') {
+	if (cmd === 'topAgent') {
 		return 'work in progress';
 	}
-	if (cmd === 'Top3Agents') {
+	if (cmd === 'top3Agents') {
 		return 'work in progress';
 	}
-	if (cmd === 'Tracker') {
+	if (cmd === 'tracker') {
 		return `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(args))}/overview`;
 	}
-	if (cmd === 'TopWeapons') {
+	if (cmd === 'topWeapons') {
 		//use puppeteer and cheerio to get that info since there's no fetch request that I can access for that info
 		return 'work in progress';
 	}
-	if (cmd === 'TopWeaponsInfo') {
+	if (cmd === 'topWeaponsInfo') {
 		return 'work in progress';
 	}
 };

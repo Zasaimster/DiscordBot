@@ -3,6 +3,8 @@ const {handleValRequest} = require('./commands/val');
 
 const {doesUserExist, addUserInfo, getUserInfo, updateUserInfo} = require('./api');
 const {MessageAttachment} = require('discord.js');
+const {val} = require('cheerio/lib/api/attributes');
+const {registerCustomQueryHandler} = require('puppeteer');
 
 const PREFIX = '-';
 
@@ -10,7 +12,48 @@ module.exports = async function (message) {
 	if (!message.content.startsWith(PREFIX) || message.author.bot) return;
 
 	let msg = message.content.trim();
-	const CMD = msg.indexOf(' ') === -1 ? msg.substr(PREFIX.length) : msg.substr(PREFIX.length, msg.indexOf(' ') - 1);
+
+	messageDestructor(msg);
+
+	const [CMD, getPhrase, ign] = messageDestructor(msg);
+
+	let userExist = doesUserExist(message.author.id);
+
+	if (CMD === 'fn') {
+		if (ign === '' && !userExist) {
+			message.channel.send('Give me an account to find or register using -register');
+			return;
+		}
+		if (getPhrase === '') {
+			message.channel.send('Use -fn help to get a list of available commands');
+			return;
+		}
+
+		const msg = await handleFnRequest(getPhrase, ign, message.member.id);
+		message.channel.send(msg);
+
+		return;
+	}
+
+	if (CMD == 'val') {
+		if (ign === '' && !userExist) {
+			message.channel.send('Give me an account to find or register using -register');
+			return;
+		}
+
+		if (getPhrase === '') {
+			message.channel.send('Use -val help to get a list of available commands');
+			return;
+		}
+
+		const msg = await handleValRequest(getPhrase, ign, message.member.id);
+		message.channel.send(msg);
+
+		return;
+	}
+
+	//call separate file to handle all other commands
+
 	if (CMD === 'register') {
 		handleRegistration(message);
 	}
@@ -36,31 +79,6 @@ module.exports = async function (message) {
 			message.channel.send('Your account is not setup');
 		}
 	}
-
-	const [game, cmd] = interpretGame(CMD);
-	const args = msg.substr(msg.indexOf(' ') + 1);
-
-	if (game === 'fn') {
-		const msg = await handleFnRequest(cmd, args, message.member.id);
-		message.channel.send(msg);
-	}
-
-	console.log(game, cmd);
-	if (game == 'val') {
-		const msg = await handleValRequest(cmd, args, message.member.id);
-		message.channel.send(msg);
-	}
-};
-
-const interpretGame = (CMD) => {
-	if (CMD.substr(0, 2) === 'fn') {
-		return ['fn', CMD.substr(2)];
-	}
-	if (CMD.substr(0, 3) === 'val') {
-		return ['val', CMD.substr(3)];
-	}
-
-	return 'invalid';
 };
 
 const handleRegistration = async (message) => {
@@ -85,9 +103,9 @@ const handleRegistration = async (message) => {
 						error: ['time'],
 					})
 					.then((collected) => {
-						console.log(collected.first().content);
+						console.log(collected.first().content.trim());
 						let info = {};
-						info.valId = collected.first().content;
+						info.valId = collected.first().content.trim();
 						message.channel
 							.send(`Got it, if you'd also like to connect your Fortnite account, type your IGN. If you don't want to, respond with na`)
 							.then((message) => {
@@ -98,7 +116,7 @@ const handleRegistration = async (message) => {
 										error: ['time'],
 									})
 									.then((collected) => {
-										info.fnId = collected.first().content;
+										info.fnId = collected.first().content.trim();
 										message.channel.send(
 											`I'm saving your information, so now you can get your own stats by just doing -valStats (or any other command) without putting your name after it :)`
 										);
@@ -136,7 +154,7 @@ const handleUpdate = async (message) => {
 					})
 					.then((collected) => {
 						let info = {};
-						info.valId = collected.first().content === 'na' ? currentInfo.valId : collected.first().content;
+						info.valId = collected.first().content.trim() === 'na' ? currentInfo.valId : collected.first().content.trim();
 						message.channel
 							.send(
 								`Got it, your Fortnite account is: ${currentInfo.fnId}. Send your new username if you'd like to update your account. Otherwise, type na`
@@ -149,7 +167,7 @@ const handleUpdate = async (message) => {
 										error: ['time'],
 									})
 									.then((collected) => {
-										info.fnId = collected.first().content === 'na' ? currentInfo.fnId : collected.first().content;
+										info.fnId = collected.first().content.trim() === 'na' ? currentInfo.fnId : collected.first().content.trim();
 										message.channel.send(`Saving your info. Valorant: ${info.valId} Fortnite: ${info.fnId}`);
 										updateUserInfo(info, member.id);
 									})
@@ -161,4 +179,24 @@ const handleUpdate = async (message) => {
 	} else {
 		message.channel.send(`You don't have your accounts linked yet. Use -register to get started`);
 	}
+};
+
+const messageDestructor = (msg) => {
+	const space1 = msg.indexOf(' ');
+	//if its just -xxx, then make that the cmd. if there is more, take substr until first space
+	//game or generic command
+	-val;
+	const CMD = msg.indexOf(' ') === -1 ? msg.substr(PREFIX.length) : msg.substr(PREFIX.length, msg.indexOf(' ') - 1);
+
+	const withoutCMD = space1 === -1 ? '' : msg.substr(space1 + 1);
+	const space2 = withoutCMD.indexOf(' ');
+	//get game
+	//ex: -val stats zas #8866
+	const getPhrase = space2 === -1 ? withoutCMD : withoutCMD.substr(0, space2);
+
+	const ign = space2 === -1 ? '' : withoutCMD.substring(space2 + 1);
+
+	console.log(`CMD: '${CMD}', getPhrase: '${getPhrase}', ign: '${ign}', withoutCMD: '${withoutCMD}'`);
+
+	return [CMD, getPhrase, ign];
 };
