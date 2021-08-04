@@ -1,4 +1,6 @@
 const axios = require('axios');
+const {MessageEmbed} = require('discord.js');
+
 require('dotenv').config();
 
 const getData = async (url) => {

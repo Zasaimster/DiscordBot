@@ -1,26 +1,61 @@
-const {convertPRToReadableString, prettifyFNStats} = require('../helper/functions');
+const {convertPRToReadableString, prettifyFNStats, convertCommandToValidValUser} = require('../helper/functions');
 const {getFnStats} = require('../scrapers/fnScraper');
+const {MessageEmbed} = require('discord.js');
 
-const handleFnRequest = async (cmd, args) => {
-	const stats = await getFnStats(args);
+const handleFnRequest = async (cmd, ign, author) => {
+	const stats = await getFnStats(ign);
 	if (stats.status !== undefined && stats.status !== 200) {
 		return stats.status;
 	}
-
 	switch (cmd) {
-		case 'Stats':
-			return prettifyFNStats(stats);
-		case 'Pr':
-			return convertPRToReadableString(stats.points);
-		case 'Earnings':
-			return `$${stats.cashPrize}`;
-		case 'Events':
-			return stats.events;
-		case 'Tracker':
-			return `https://fortnitetracker.com/profile/all/${encodeURI(args)}/events`;
+		case 'stats':
+			return embedStats(stats.data, ign, author);
+		case 'pr':
+			return embedSingleInfo({name: 'PR', value: `${convertPRToReadableString(stats.data.points)}`}, stats.data, ign, author);
+		case 'earnings':
+			return embedSingleInfo({name: 'Earnings', value: `$${stats.data.cashPrize}`});
+		case 'events':
+			return embedSingleInfo({name: 'Events', value: `${stats.data.events}`});
+		case 'tracker':
+			return `https://fortnitetracker.com/profile/all/${encodeURI(ign)}/events`;
 		default:
-			return 'Error handling your request?? idk';
+			return 'not a command';
 	}
+};
+
+const embedStats = (data, ign, author) => {
+	const statsEmbed = new MessageEmbed()
+		.setColor('#006eff')
+		.setTitle(`${data.name}'s Fortnite Stats`)
+		.setURL(`https://fortnitetracker.com/profile/all/${encodeURI(ign)}/events`)
+		.addFields(getFieldsStatsInfo(data))
+		.setFooter(`${author}`, 'https://i.imgur.com/rywd92h.jpeg');
+
+	return statsEmbed;
+};
+
+const embedSingleInfo = (stat, data, ign, author) => {
+	const infoEmbed = new MessageEmbed()
+		.setColor('#006eff')
+		.setTitle(`${data.name}'s Fortnite Stats`)
+		.setURL(`https://fortnitetracker.com/profile/all/${encodeURI(ign)}/events`)
+		.addFields(stat)
+		.setFooter(`${author}`, 'https://i.imgur.com/rywd92h.jpeg');
+
+	return infoEmbed;
+};
+
+const getFieldsStatsInfo = (stats) => {
+	let fields = [];
+
+	fields.push({name: 'Region', value: stats.region});
+	fields.push({name: 'Platform', value: stats.platform});
+	fields.push({name: 'PR', value: convertPRToReadableString(stats.points)});
+	fields.push({name: 'Rank', value: stats.rank});
+	fields.push({name: 'Earnings', value: stats.cashPrize});
+	fields.push({name: 'Events', value: stats.events});
+
+	return fields;
 };
 
 exports.handleFnRequest = handleFnRequest;

@@ -9,8 +9,8 @@ const handleValRequest = async (cmd, ign) => {
 		return commands;
 	}
 
-	//const res = await getValStats(args);
-	//const stats = res.data.data[0].stats;
+	const res = await getValStats(ign);
+	const stats = res.data.data[0].stats;
 	if (res.status !== 200) {
 		return res.status;
 	}

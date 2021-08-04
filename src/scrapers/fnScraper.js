@@ -1,4 +1,4 @@
-require('dotenv').config();
+const {getData} = require('../helper/functions');
 
 const PLATFORM = 'pc';
 const REGION = 'naw';

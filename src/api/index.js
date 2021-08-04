@@ -32,6 +32,18 @@ const getUserInfo = async (id) => {
 	};
 };
 
+const getValId = async (id) => {
+	const user = await db.collection('discord-users').doc(id).get();
+
+	return user.data().val_id;
+};
+
+const getFnId = async (id) => {
+	const user = await db.collection('discord-users').doc(id).get();
+
+	return user.data().fn_id;
+};
+
 const updateUserInfo = async (info, id) => {
 	const res = await db.collection('discord-users').doc(id).update({
 		val_id: info.valId,
@@ -44,3 +56,5 @@ exports.doesUserExist = doesUserExist;
 exports.addUserInfo = addUserInfo;
 exports.getUserInfo = getUserInfo;
 exports.updateUserInfo = updateUserInfo;
+exports.getValId = getValId;
+exports.getFnId = getFnId;
