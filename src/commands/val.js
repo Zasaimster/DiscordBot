@@ -67,11 +67,7 @@ const handleValRequest = async (cmd, ign, author) => {
 			return res.status;
 		}
 
-		let info = getLast20Info(matches);
-		let embedInfo = [];
-		for (const property in info) {
-			embedInfo.push({name: `${property}`, value: info[property]});
-		}
+		let embedInfo = getEmbedInfo(getLast20Info(matches));
 
 		return embedSingleInfo(`${ign}'s Last 20 Matches`, embedInfo, ign, author);
 	}
@@ -96,16 +92,66 @@ const handleValRequest = async (cmd, ign, author) => {
 		return embedSingleInfo({name: 'Win %', value: `${stats.matchesWinPct.displayValue}`}, ign, author);
 	}
 	if (cmd === 'topAgentInfo') {
-		return embedSingleInfo({name: 'Top Agent Info', value: `${'work in progress'}`}, ign, author);
+		const res = await getValAgentStats(ign);
+		const stats = res.data.data.segments;
+
+		if (res.status !== 200) {
+			return res.status;
+		}
+
+		let embedInfo = getEmbedInfo(getTop3AgentInfo(stats)[0]);
+
+		return embedSingleInfo(`${ign}'s Top Agent`, embedInfo, ign, author);
 	}
-	if (cmd === 'top3AgentsInfo') {
-		return embedSingleInfo({name: 'Top 3 Agents Info', value: `${'work in progress'}`}, ign, author);
+	if (cmd === 'top2AgentInfo') {
+		const res = await getValAgentStats(ign);
+		const stats = res.data.data.segments;
+
+		if (res.status !== 200) {
+			return res.status;
+		}
+
+		let embedInfo = getEmbedInfo(getTop3AgentInfo(stats)[1]);
+
+		return embedSingleInfo(`${ign}'s Top Agent`, embedInfo, ign, author);
+	}
+	if (cmd === 'top3AgentInfo') {
+		const res = await getValAgentStats(ign);
+		const stats = res.data.data.segments;
+
+		if (res.status !== 200) {
+			return res.status;
+		}
+
+		let embedInfo = getEmbedInfo(getTop3AgentInfo(stats)[2]);
+
+		return embedSingleInfo(`${ign}'s Top Agent`, embedInfo, ign, author);
 	}
 	if (cmd === 'topAgent') {
-		return embedSingleInfo({name: 'Top Agent', value: `${'work in progress'}`}, ign, author);
+		const res = await getValAgentStats(ign);
+		const stats = res.data.data.segments;
+
+		if (res.status !== 200) {
+			return res.status;
+		}
+
+		let info = getTop3AgentInfo(stats)[0];
+		return embedSingleInfo(`${ign}'s Top Agent`, {name: `${info.Name}`, value: '\u200B'}, ign, author);
 	}
 	if (cmd === 'top3Agents') {
-		return embedSingleInfo({name: 'Top 3 Agents', value: `${'work in progress'}`}, ign, author);
+		const res = await getValAgentStats(ign);
+		const stats = res.data.data.segments;
+
+		if (res.status !== 200) {
+			return res.status;
+		}
+
+		let info = getTop3AgentInfo(stats);
+		let embedInfo = [];
+		embedInfo.push({name: '#1', value: `${info[0].Name}`});
+		embedInfo.push({name: '#2', value: `${info[1].Name}`});
+		embedInfo.push({name: '#3', value: `${info[2].Name}`});
+		return embedSingleInfo(`${ign}'s Top 3 Agents`, embedInfo, ign, author);
 	}
 	if (cmd === 'tracker') {
 		return `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(ign))}/overview`;
@@ -156,6 +202,45 @@ const getLast20Info = (matches) => {
 	};
 };
 
+const getTop3AgentInfo = (stats) => {
+	let top3 = [0, 0, 0];
+
+	for (const segment of stats) {
+		if (segment.type === 'agent') {
+			//check for top 1
+			let temp = {};
+			if (top3[0] === 0 || segment.stats.timePlayed.value >= top3[0].stats.timePlayed.value) {
+				temp = top3[1];
+				top3[1] = top3[0];
+				top3[2] = temp;
+
+				top3[0] = segment;
+			} else if (top3[1] === 0 || segment.stats.timePlayed.value >= top3[1].stats.timePlayed.value) {
+				top3[2] = top3[1];
+
+				top3[1] = segment;
+			} else if (top3[2] === 0 || segment.stats.timePlayed.value >= top3[2].stats.timePlayed.value) {
+				top3[2] = segment;
+			}
+		}
+	}
+	let res = [];
+	for (const agent of top3) {
+		//name, time played, matches played, win%, kd, adr,
+		res.push({
+			Name: agent.metadata.name,
+			'Time Played': agent.stats.timePlayed.displayValue,
+			Matches: agent.stats.matchesPlayed.displayValue,
+			'Win %': agent.stats.matchesWinPct.displayValue,
+			'Kills/Round': agent.stats.killsPerRound.displayValue,
+			KD: agent.stats.kDRatio.displayValue,
+			ADR: agent.stats.damagePerRound.displayValue,
+		});
+	}
+
+	return res;
+};
+
 const embedStats = (ign, author) => {
 	const statsEmbed = new MessageEmbed()
 		.setColor('#ff4040')
@@ -176,6 +261,15 @@ const embedSingleInfo = (title, stat, ign, author) => {
 		.setFooter(`${author}`, 'https://i.imgur.com/O3oribA.png');
 
 	return infoEmbed;
+};
+
+const getEmbedInfo = (info) => {
+	let embedInfo = [];
+	for (const property in info) {
+		embedInfo.push({name: `${property}`, value: info[property]});
+	}
+
+	return embedInfo;
 };
 
 exports.handleValRequest = handleValRequest;
