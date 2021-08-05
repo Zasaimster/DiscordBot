@@ -26,6 +26,12 @@ const handleRegularRequest = async (CMD, message) => {
 			message.channel.send('Your account is not setup');
 		}
 	}
+
+	if (CMD === 'help') {
+		message.channel.send(
+			`Use -register to setup your account. You can also use '-val help' or '-fn help' to get started if you don't want to register your account `
+		);
+	}
 };
 
 const handleUpdate = async (message) => {

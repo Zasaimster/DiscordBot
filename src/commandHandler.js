@@ -1,7 +1,7 @@
 const {handleFnRequest} = require('./commands/fort');
 const {handleValRequest} = require('./commands/val');
 
-const {doesUserExist, addUserInfo, getUserInfo, updateUserInfo, getValId, getFnId} = require('./api');
+const {doesUserExist, getValId, getFnId} = require('./api');
 const {val} = require('cheerio/lib/api/attributes');
 const {handleRegularRequest} = require('./commands/regularCommands');
 
@@ -66,8 +66,8 @@ const messageDestructor = (msg) => {
 	const space1 = msg.indexOf(' ');
 	//if its just -xxx, then make that the cmd. if there is more, take substr until first space
 	//game or generic command
-	-val;
-	const CMD = msg.indexOf(' ') === -1 ? msg.substr(PREFIX.length) : msg.substr(PREFIX.length, msg.indexOf(' ') - 1);
+
+	const CMD = msg.indexOf(' ') === -1 ? msg.substr(PREFIX.length).toLowerCase() : msg.substr(PREFIX.length, msg.indexOf(' ') - 1).toLowerCase();
 
 	const withoutCMD = space1 === -1 ? '' : msg.substr(space1 + 1);
 	const space2 = withoutCMD.indexOf(' ');

@@ -13,9 +13,9 @@ const handleFnRequest = async (cmd, ign, author) => {
 		case 'pr':
 			return embedSingleInfo({name: 'PR', value: `${convertPRToReadableString(stats.data.points)}`}, stats.data, ign, author);
 		case 'earnings':
-			return embedSingleInfo({name: 'Earnings', value: `$${stats.data.cashPrize}`});
+			return embedSingleInfo({name: 'Earnings', value: `$${stats.data.cashPrize}`}, stats.data, ign, author);
 		case 'events':
-			return embedSingleInfo({name: 'Events', value: `${stats.data.events}`});
+			return embedSingleInfo({name: 'Events', value: `${stats.data.events}`}, stats.data, ign, author);
 		case 'tracker':
 			return `https://fortnitetracker.com/profile/all/${encodeURI(ign)}/events`;
 		default:
@@ -48,8 +48,8 @@ const embedSingleInfo = (stat, data, ign, author) => {
 const getFieldsStatsInfo = (stats) => {
 	let fields = [];
 
-	fields.push({name: 'Region', value: stats.region});
-	fields.push({name: 'Platform', value: stats.platform});
+	fields.push({name: 'Region', value: stats.region, inline: true});
+	fields.push({name: 'Platform', value: stats.platform, inline: true});
 	fields.push({name: 'PR', value: convertPRToReadableString(stats.points)});
 	fields.push({name: 'Rank', value: stats.rank});
 	fields.push({name: 'Earnings', value: stats.cashPrize});
