@@ -48,10 +48,32 @@ const handleValRequest = async (cmd, ign, author) => {
 		return embedSingleInfo({name: 'KAD Ratio', value: `${stats.kADRatio.displayValue}`}, ign, author);
 	}
 	if (cmd === 'last20acc') {
-		return embedSingleInfo({name: 'Last 20 Games Accuracy', value: `${'work in progress'}`}, ign, author);
+		const res = await getValLast20Stats(ign);
+		const matches = res.data.data.matches;
+
+		if (res.status !== 200) {
+			return res.status;
+		}
+
+		//let info = getLast20Accuracy(matches);
+
+		return embedSingleInfo(embedInfo, ign, author);
 	}
 	if (cmd === 'last20') {
-		return embedSingleInfo({name: 'Last 20 Games Info', value: `${'work in progress'}`}, ign, author);
+		const res = await getValLast20Stats(ign);
+		const matches = res.data.data.matches;
+
+		if (res.status !== 200) {
+			return res.status;
+		}
+
+		let info = getLast20Info(matches);
+		let embedInfo = [];
+		for (const property in info) {
+			embedInfo.push({name: `${property}`, value: info[property]});
+		}
+
+		return embedSingleInfo(`${ign}'s Last 20 Matches`, embedInfo, ign, author);
 	}
 	if (cmd === 'hs%') {
 		const res = await getValStats(ign);
@@ -101,6 +123,39 @@ const handleValRequest = async (cmd, ign, author) => {
 	//implement command to get someone's matches played
 };
 
+const getLast20Accuracy = (matches) => {
+	//puppeteer + cheerio this
+};
+
+const getLast20Info = (matches) => {
+	//give avg headshot%, win los (and %), kd, adr
+	let hs = (wins = losses = kd = adr = 0);
+	for (const matchInfo of matches) {
+		let match = matchInfo.segments[0];
+		hs += match.stats.headshotsPercentage.value;
+		console.log(hs);
+		if (match.metadata.hasWon) {
+			wins++;
+		} else {
+			losses++;
+		}
+		kd += match.stats.kdRatio.value;
+		adr += match.stats.damagePerRound.value;
+	}
+	console.log(hs);
+	hs /= matches.length;
+	//let winLoss = wins / losses;
+	kd /= matches.length;
+	adr /= matches.length;
+	return {
+		'Headshot %': `${hs.toFixed(1)}%`,
+		'Win - Loss': `${wins} - ${losses}`,
+		'Win %': `${(wins / losses).toFixed(1)}`,
+		'KD Ratio': kd.toFixed(2),
+		ADR: adr.toFixed(0),
+	};
+};
+
 const embedStats = (ign, author) => {
 	const statsEmbed = new MessageEmbed()
 		.setColor('#ff4040')
@@ -112,10 +167,10 @@ const embedStats = (ign, author) => {
 	return statsEmbed;
 };
 
-const embedSingleInfo = (stat, ign, author) => {
+const embedSingleInfo = (title, stat, ign, author) => {
 	const infoEmbed = new MessageEmbed()
 		.setColor('#ff4040')
-		.setTitle(`${ign}'s Valorant Stats`)
+		.setTitle(title)
 		.setURL(`https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(ign))}/overview`)
 		.addFields(stat)
 		.setFooter(`${author}`, 'https://i.imgur.com/O3oribA.png');
