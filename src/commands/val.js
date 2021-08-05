@@ -13,9 +13,56 @@ const handleValRequest = async (cmd, ign, author) => {
 	}
 
 	if (cmd === 'stats') {
-		//figure this one out
-		//return res[0].stats;
-		return 'work in progress';
+		//current rank, peak rank, kd, wins and losses, adr, kd, hs%, win%, kills, hs, deaths, assists, score/round, kill/rnd, clutches, highest kill game
+		const res = await getValStats(ign);
+		const stats = res.data.data[0].stats;
+
+		if (res.status !== 200) {
+			return res.status;
+		}
+
+		const statsInfo = {
+			Rank: stats.rank.displayValue,
+			'Peak Rank': `${stats.peakRank.displayValue}, ${stats.peakRank.metadata.actName}`,
+			'Win - Loss': `${stats.matchesWon.displayValue} - ${stats.matchesLost.displayValue}`,
+			'Win %': `${(stats.matchesWon.value / stats.matchesLost.value).toFixed(1)}`,
+			KD: stats.kDRatio.displayValue,
+			KAD: stats.kADRatio.displayValue,
+			ADR: stats.damagePerRound.displayValue,
+			'HS %': `${stats.headshotsPercentage.displayValue}%`,
+			Headshots: stats.dealtHeadshots.displayValue,
+			Kills: stats.kills.displayValue,
+			Deaths: stats.deaths.displayValue,
+			Assists: stats.assists.displayValue,
+			'Score/Round': stats.scorePerRound.displayValue,
+			'Kills/Round': stats.killsPerRound.displayValue,
+			Clutches: stats.clutches.displayValue,
+			Aces: stats.aces.displayValue,
+			'Highest Kill Game': stats.mostKillsInMatch.displayValue,
+		};
+		console.log(statsInfo);
+
+		let embedInfo = getEmbedInfo(statsInfo);
+		console.log(embedInfo);
+		embedInfo[0].inline = true;
+		embedInfo[1].inline = true;
+
+		embedInfo[4].inline = true;
+		embedInfo[5].inline = true;
+		embedInfo[6].inline = true;
+
+		embedInfo[9].inline = true;
+		embedInfo[10].inline = true;
+		embedInfo[11].inline = true;
+
+		embedInfo[12].inline = true;
+		embedInfo[13].inline = true;
+
+		//embedInfo[14].inline;
+
+		console.log(embedInfo);
+
+		return embedSingleInfo(`${ign}'s Comp Stats`, embedInfo, ign, author);
 	}
 	if (cmd === 'damagePerRound') {
 		const res = await getValStats(ign);
