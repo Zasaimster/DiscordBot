@@ -1,26 +1,44 @@
 const admin = require('firebase-admin');
 const db = admin.firestore();
 
-const doesUserExist = async (id) => {
-	console.log(id);
+const doesUserExist = async (id, member) => {
 	const usersRef = db.collection('discord-users');
 	const user = await usersRef.where('discord_id', '==', id).get();
 
 	//console.log(user);
 	if (user.size === 0) return false;
 
+	let document;
+	user.forEach((doc) => (document = doc));
+
+	if (document.data().discord_username !== member.user.username + '#' + member.user.discriminator) {
+		await updateUserDiscordUsername(id, member);
+	}
+
 	return true;
 };
 
-const addUserInfo = async (info, id) => {
+const updateUserDiscordUsername = async (id, member) => {
+	const res = await db
+		.collection('discord-users')
+		.doc(id)
+		.update({
+			discord_username: member.user.username + '#' + member.user.discriminator,
+		});
+	console.log(`Updated doc with id: ${res.discord_id}`);
+};
+
+const addUserInfo = async (info, member) => {
+	let username = member.user.username + '#' + member.user.discriminator;
 	let obj = {
-		discord_id: id,
+		discord_id: member.id,
+		discord_username: username,
 		val_id: info.valId,
 		fn_id: info.fnId,
 	};
 
-	const res = await db.collection('discord-users').doc(id).set(obj);
-	console.log(`Added doc with id: ${res.discord_id}`);
+	const res = await db.collection('discord-users').doc(member.id).set(obj);
+	console.log(`Added doc with id: ${member.id}`);
 };
 
 const getUserInfo = async (id) => {

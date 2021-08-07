@@ -10,7 +10,7 @@ const handleRegularRequest = async (CMD, message) => {
 	}
 
 	if (CMD === 'valId') {
-		if (await doesUserExist(message.author.id)) {
+		if (await doesUserExist(message.author.id, message.member)) {
 			let info = await getUserInfo(message.author.id);
 			message.channel.send(info.valId);
 		} else {
@@ -19,7 +19,7 @@ const handleRegularRequest = async (CMD, message) => {
 	}
 
 	if (CMD === 'fnId') {
-		if (await doesUserExist(message.author.id)) {
+		if (await doesUserExist(message.author.id, message.member)) {
 			let info = await getUserInfo(message.author.id);
 			message.channel.send(info.fnId);
 		} else {
@@ -36,7 +36,7 @@ const handleRegularRequest = async (CMD, message) => {
 const handleUpdate = async (message) => {
 	member = message.member;
 
-	if (await doesUserExist(member.id)) {
+	if (await doesUserExist(member.id, message.member)) {
 		const currentInfo = await getUserInfo(member.id);
 		console.log(currentInfo);
 
@@ -88,7 +88,7 @@ const handleRegistration = async (message) => {
 	console.log('in handle registration');
 	member = message.member;
 
-	if (await doesUserExist(member.id)) {
+	if (await doesUserExist(member.id, message.member)) {
 		console.log('exists');
 		message.channel.send('Your Discord account is already linked!');
 	} else {
@@ -121,9 +121,9 @@ const handleRegistration = async (message) => {
 									.then((collected) => {
 										info.fnId = collected.first().content.trim();
 										message.channel.send(
-											`I'm saving your information, so now you can get your own stats by just doing -valStats (or any other command) without putting your name after it :)`
+											`I'm saving your information, so now you can get your own stats (type -help for more info) :)`
 										);
-										addUserInfo(info, member.id);
+										addUserInfo(info, member);
 									})
 									.catch((err) => message.channel.send(`Whoops, I didn't catch that. Please re-register again`));
 							});

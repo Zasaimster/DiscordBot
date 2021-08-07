@@ -16,7 +16,7 @@ module.exports = async function (message) {
 
 	const [CMD, getPhrase, ign] = messageDestructor(msg);
 
-	let userExist = doesUserExist(message.author.id);
+	let userExist = doesUserExist(message.author.id, message.member);
 
 	if (CMD === 'fn') {
 		if (ign === '' && !userExist) {
