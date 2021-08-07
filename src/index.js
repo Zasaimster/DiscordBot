@@ -21,7 +21,7 @@ client.on('ready', () => {
 	//silver to diamond: https://i.imgur.com/THA3rVI.jpg
 	//monkey: https://i.imgur.com/othLBaA.png
 	//client.user.setAvatar('https://i.imgur.com/THA3rVI.jpg');
-	client.user.setActivity('Zas');
+	client.user.setActivity('-help to get started');
 });
 
 const commandHandler = require('./commandHandler');

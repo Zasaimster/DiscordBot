@@ -16,19 +16,19 @@ module.exports = async function (message) {
 
 	const [CMD, getPhrase, ign] = messageDestructor(msg);
 
-	let userExist = doesUserExist(message.author.id, message.member);
+	//let userExist = await doesUserExist(message.author.id, message.member);
 
 	if (CMD === 'fn') {
-		if (ign === '' && !userExist) {
-			message.channel.send('Give me an account to find or register using -register');
-			return;
-		}
 		if (getPhrase === '') {
-			message.channel.send('Use -fn help to get a list of available commands');
+			message.channel.send('Use `-fn help` to get a list of available commands');
 			return;
 		}
-
 		realIgn = ign === '' ? await getFnId(message.author.id) : ign;
+		console.log(realIgn);
+		if (realIgn === '') {
+			message.channel.send('Give me an account by typing `-fn <command> <ign>` or register using `-register`');
+			return;
+		}
 
 		const msg = await handleFnRequest(getPhrase, realIgn, message.author.username);
 		message.channel.send(msg);
@@ -37,16 +37,15 @@ module.exports = async function (message) {
 	}
 
 	if (CMD == 'val') {
-		if (ign === '' && !userExist) {
-			message.channel.send('Give me an account to find or register using -register');
-			return;
-		}
-
 		if (getPhrase === '') {
-			message.channel.send('Use -val help to get a list of available commands');
+			message.channel.send('Use `-val help` to get a list of available commands');
 			return;
 		}
-
+		realIgn = ign === '' ? await getFnId(message.author.id) : ign;
+		if (realIgn === '') {
+			message.channel.send('Give me an account by typing `-val <command> <ign>` or register using `-register`');
+			return;
+		}
 		realIgn = ign === '' ? await getValId(message.author.id) : ign;
 
 		const msg = await handleValRequest(getPhrase, realIgn, message.author.username);
@@ -56,8 +55,8 @@ module.exports = async function (message) {
 		return;
 	}
 
-	const res = await handleRegularRequest(CMD, message);
-	message.channel.send(res);
+	await handleRegularRequest(CMD, message);
+	//message.channel.send(res);
 
 	//call separate file to handle all other commands
 };

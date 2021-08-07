@@ -12,7 +12,7 @@ const getData = async (url) => {
 			},
 		})
 		.catch((err) => {
-			console.log('requesting data error:', err);
+			//console.log('requesting data error:', err);
 		});
 };
 

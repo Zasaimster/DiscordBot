@@ -12,6 +12,11 @@ const handleValRequest = async (cmd, ign, author) => {
 			You can get Valorant stats by using \`-val <command> <ign>\` or by registering your account with \`-register\` then using \`-val <command> <ign>\` (replace the brackets with a proper command/ign).\n\nValid fortnite commands are: \n${commandsString}
 		`;
 	}
+	if ((await getValStats(ign)) === undefined) {
+		return `There was an error getting this account's information. It's either not a valid account or it's private and needs to be made public.\n\nTo find out more, go to https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(
+			encodeURI(ign)
+		)}/overview `;
+	}
 
 	if (cmd === 'stats') {
 		//current rank, peak rank, kd, wins and losses, adr, kd, hs%, win%, kills, hs, deaths, assists, score/round, kill/rnd, clutches, highest kill game

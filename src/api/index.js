@@ -53,13 +53,13 @@ const getUserInfo = async (id) => {
 const getValId = async (id) => {
 	const user = await db.collection('discord-users').doc(id).get();
 
-	return user.data().val_id;
+	return user.data() === undefined ? '' : user.data().val_id;
 };
 
 const getFnId = async (id) => {
 	const user = await db.collection('discord-users').doc(id).get();
 
-	return user.data().fn_id;
+	return user.data() === undefined ? '' : user.data().fn_id;
 };
 
 const updateUserInfo = async (info, id) => {

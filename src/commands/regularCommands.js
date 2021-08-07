@@ -1,30 +1,22 @@
-const {doesUserExist, addUserInfo, getUserInfo, updateUserInfo} = require('../api');
+const {doesUserExist, addUserInfo, getUserInfo, updateUserInfo, getValId, getFnId} = require('../api');
 
 const handleRegularRequest = async (CMD, message) => {
 	if (CMD === 'register') {
 		handleRegistration(message);
 	}
 
-	if (CMD === 'updateAccount') {
+	if (CMD === 'updateaccount') {
 		handleUpdate(message);
 	}
 
-	if (CMD === 'valId') {
-		if (await doesUserExist(message.author.id, message.member)) {
-			let info = await getUserInfo(message.author.id);
-			message.channel.send(info.valId);
-		} else {
-			message.channel.send('Your account is not setup');
-		}
+	if (CMD === 'valid') {
+		let id = await getValId(message.author.id);
+		id === '' ? message.channel.send('Your account is not setup') : message.channel.send(id);
 	}
 
-	if (CMD === 'fnId') {
-		if (await doesUserExist(message.author.id, message.member)) {
-			let info = await getUserInfo(message.author.id);
-			message.channel.send(info.fnId);
-		} else {
-			message.channel.send('Your account is not setup');
-		}
+	if (CMD === 'fnid') {
+		let id = await getFnId(message.author.id);
+		id === '' ? message.channel.send('Your account is not setup') : message.channel.send(id);
 	}
 
 	if (CMD === 'help') {
@@ -80,7 +72,7 @@ const handleUpdate = async (message) => {
 				//.catch((collected) => message.channel.send(`Whoops, I didn't catch that. Please re-register again`));
 			});
 	} else {
-		message.channel.send(`You don't have your accounts linked yet. Use -register to get started`);
+		message.channel.send(`You don't have your accounts linked yet. Use \`-register\` to get started`);
 	}
 };
 
