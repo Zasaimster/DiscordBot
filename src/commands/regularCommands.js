@@ -28,9 +28,8 @@ const handleRegularRequest = async (CMD, message) => {
 	}
 
 	if (CMD === 'help') {
-		message.channel.send(
-			`Use -register to setup your account. You can also use '-val help' or '-fn help' to get started if you don't want to register your account `
-		);
+		let res = `To get started you can get game stats right away by using \`-<game> help\` to find more information about retrieving stats for specific games.\nAvailable game help commands are:\n\`-fn help\`, \`-val help\`\n\nIf you'd like to register an account you can use \`-register\` to get started or use \`-updateAccount\` if you'd like to update your account information.\n\nIf you'd like to know your registered information you can find them by using \`-fnId\` or \`-valId\``;
+		message.channel.send(res);
 	}
 };
 

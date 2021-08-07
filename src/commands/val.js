@@ -6,10 +6,11 @@ const handleValRequest = async (cmd, ign, author) => {
 	console.log(cmd);
 	if (cmd === 'help') {
 		console.log('help');
-		let commands =
-			'-val stats, -val damagePerRound, -val kd, -val kad, -val last20acc, -val last20, -val hs%, -val win%, -val topAgentInfo, -val top3AgentsInfo, -val topAgent, -val top3Agents, -val tracker, -val topWeapons, -val topWeaponsInfo';
-
-		return commands;
+		let commandsString =
+			'`-val stats`, `-val damagePerRound`, `-val kd`, `-val kad`, `-val last20acc`, `-val last20`, `-val hs%`, `-val win%`, `-val topAgentInfo`, `-val top2AgentInfo`, `-val top3AgentInfo`, `-val topAgent`, `-val top3Agents`, `-val tracker`, `-val topWeapons`, `-val topWeaponsInfo`';
+		return `
+			You can get Valorant stats by using \`-val <command> <ign>\` or by registering your account with \`-register\` then using \`-val <command> <ign>\` (replace the brackets with a proper command/ign).\n\nValid fortnite commands are: \n${commandsString}
+		`;
 	}
 
 	if (cmd === 'stats') {
@@ -21,17 +22,19 @@ const handleValRequest = async (cmd, ign, author) => {
 			return res.status;
 		}
 
-		let toDisplay;
+		let rank, peakRank;
 		const tierName = stats.rank.metadata.tierName;
 		if (tierName.startsWith('Immortal') || tierName.startsWith('Radiant')) {
-			toDisplay = tierName.substr(0, tierName.indexOf(' ')) + ' ' + stats.rank.displayValue + 'RR';
+			rank = tierName.substr(0, tierName.indexOf(' ')) + ' ' + stats.rank.displayValue + 'RR';
+			peakRank = tierName.substr(0, tierName.indexOf(' ')) + ' ' + stats.rank.displayValue + 'RR' + ', ' + stats.peakRank.metadata.actName;
 		} else {
-			toDisplay = stats.rank.displayValue;
+			rank = stats.rank.displayValue;
+			peakRank = `${stats.peakRank.displayValue}, ${stats.peakRank.metadata.actName}`;
 		}
 
 		const statsInfo = {
-			Rank: toDisplay,
-			'Peak Rank': `${stats.peakRank.displayValue}, ${stats.peakRank.metadata.actName}`,
+			Rank: rank,
+			'Peak Rank': peakRank,
 			'Win - Loss': `${stats.matchesWon.displayValue} - ${stats.matchesLost.displayValue}`,
 			'Win %': `${stats.matchesWinPct.value}%`,
 			KD: stats.kDRatio.displayValue,
@@ -112,7 +115,7 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		//let info = getLast20Accuracy(matches);
 
-		return embedSingleInfo(embedInfo, ign, author);
+		return embedSingleInfo(`${ign}'s Accuracy In the Last 20 Matches`, 'this aint work', ign, author);
 	}
 	if (cmd === 'last20') {
 		const res = await getValLast20Stats(ign);
@@ -240,7 +243,25 @@ const handleValRequest = async (cmd, ign, author) => {
 		}
 		return embedSingleInfo(`${ign}'s Current Rank`, {name: 'Rank', value: `${toDisplay}`}, ign, author);
 	}
-	//implement command to get someone's peak rank
+
+	if (cmd === 'peakRank') {
+		const res = await getValStats(ign);
+		const stats = res.data.data[0].stats;
+
+		if (res.status !== 200) {
+			return res.status;
+		}
+
+		let toDisplay;
+		const tierName = stats.rank.metadata.tierName;
+		if (tierName.startsWith('Immortal') || tierName.startsWith('Radiant')) {
+			toDisplay = tierName.substr(0, tierName.indexOf(' ')) + ' ' + stats.rank.displayValue + 'RR' + ', ' + stats.peakRank.metadata.actName;
+		} else {
+			toDisplay = `${stats.peakRank.displayValue}, ${stats.peakRank.metadata.actName}`;
+		}
+		return embedSingleInfo(`${ign}'s Peak Rank`, {name: 'Peak Rank', value: `${toDisplay}`}, ign, author);
+	}
+
 	//implement command to get someone's playtime
 	//implement command to get someone's matches played
 };

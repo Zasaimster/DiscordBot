@@ -3,10 +3,24 @@ const {getFnStats} = require('../scrapers/fnScraper');
 const {MessageEmbed} = require('discord.js');
 
 const handleFnRequest = async (cmd, ign, author) => {
-	const stats = await getFnStats(ign);
-	if (stats.status !== undefined && stats.status !== 200) {
-		return stats.status;
+	if (cmd === 'help') {
+		return `
+			You can get Fortnite stats by using \`-fn <command> <ign>\` or by registering your account with \`-register\` then using \`-fn <command> <ign>\` (replace the brackets with a proper command/ign).\n\nValid fortnite commands are: \n\`-fn stats\`, \`-fn pr\`, \`-fn earnings\`, \`-fn events\`, \`-fn tracker\`
+		`;
 	}
+
+	const stats = await getFnStats(ign);
+
+	if (stats === undefined) {
+		return 'Invalid Fortnite ID';
+	}
+
+	if (stats.status === 202) {
+		return `There was an error getting this account's info. This account may not exist, there may be no competitive history on this account, or there may be some other issue. Sorry about that\n\nYou can find more info about this account at https://fortnitetracker.com/profile/all/${encodeURI(
+			ign
+		)}/events`;
+	}
+
 	switch (cmd) {
 		case 'stats':
 			return embedStats(stats.data, ign, author);
@@ -52,7 +66,7 @@ const getFieldsStatsInfo = (stats) => {
 	fields.push({name: 'Platform', value: stats.platform, inline: true});
 	fields.push({name: 'PR', value: convertPRToReadableString(stats.points)});
 	fields.push({name: 'Rank', value: stats.rank});
-	fields.push({name: 'Earnings', value: stats.cashPrize});
+	fields.push({name: 'Earnings', value: `$${stats.cashPrize}`});
 	fields.push({name: 'Events', value: stats.events});
 
 	return fields;
