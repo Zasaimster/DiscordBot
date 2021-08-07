@@ -21,11 +21,19 @@ const handleValRequest = async (cmd, ign, author) => {
 			return res.status;
 		}
 
+		let toDisplay;
+		const tierName = stats.rank.metadata.tierName;
+		if (tierName.startsWith('Immortal') || tierName.startsWith('Radiant')) {
+			toDisplay = tierName.substr(0, tierName.indexOf(' ')) + ' ' + stats.rank.displayValue + 'RR';
+		} else {
+			toDisplay = stats.rank.displayValue;
+		}
+
 		const statsInfo = {
-			Rank: stats.rank.displayValue,
+			Rank: toDisplay,
 			'Peak Rank': `${stats.peakRank.displayValue}, ${stats.peakRank.metadata.actName}`,
 			'Win - Loss': `${stats.matchesWon.displayValue} - ${stats.matchesLost.displayValue}`,
-			'Win %': `${(stats.matchesWon.value / stats.matchesLost.value).toFixed(1)}`,
+			'Win %': `${stats.matchesWinPct.value}%`,
 			KD: stats.kDRatio.displayValue,
 			KAD: stats.kADRatio.displayValue,
 			ADR: stats.damagePerRound.displayValue,
@@ -72,7 +80,7 @@ const handleValRequest = async (cmd, ign, author) => {
 			return res.status;
 		}
 
-		return embedSingleInfo({name: 'Damage Per Round', value: `${stats.damagePerRound.displayValue}`}, ign, author);
+		return embedSingleInfo(`${ign}'s Damage Per Round`, {name: 'Damage Per Round', value: `${stats.damagePerRound.displayValue}`}, ign, author);
 	}
 	if (cmd === 'kd') {
 		const res = await getValStats(ign);
@@ -82,7 +90,7 @@ const handleValRequest = async (cmd, ign, author) => {
 			return res.status;
 		}
 
-		return embedSingleInfo({name: 'K/D Ratio', value: `${stats.kDRatio.displayValue}`}, ign, author);
+		return embedSingleInfo(`${ign}'s KD Ratio`, {name: 'K/D Ratio', value: `${stats.kDRatio.displayValue}`}, ign, author);
 	}
 	if (cmd === 'kad') {
 		const res = await getValStats(ign);
@@ -92,7 +100,7 @@ const handleValRequest = async (cmd, ign, author) => {
 			return res.status;
 		}
 
-		return embedSingleInfo({name: 'KAD Ratio', value: `${stats.kADRatio.displayValue}`}, ign, author);
+		return embedSingleInfo(`${ign}'s KAD Ratio`, {name: 'KAD Ratio', value: `${stats.kADRatio.displayValue}`}, ign, author);
 	}
 	if (cmd === 'last20acc') {
 		const res = await getValLast20Stats(ign);
@@ -126,7 +134,12 @@ const handleValRequest = async (cmd, ign, author) => {
 			return res.status;
 		}
 
-		return embedSingleInfo({name: 'Headshot %', value: `${stats.headshotsPercentage.displayValue}%`}, ign, author);
+		return embedSingleInfo(
+			`${ign}'s Headshot Percentage`,
+			{name: 'Headshot %', value: `${stats.headshotsPercentage.displayValue}%`},
+			ign,
+			author
+		);
 	}
 	if (cmd === 'win%') {
 		const res = await getValStats(ign);
@@ -136,7 +149,7 @@ const handleValRequest = async (cmd, ign, author) => {
 			return res.status;
 		}
 
-		return embedSingleInfo({name: 'Win %', value: `${stats.matchesWinPct.displayValue}`}, ign, author);
+		return embedSingleInfo(`${ign}'s Win Percentage`, {name: 'Win %', value: `${stats.matchesWinPct.displayValue}`}, ign, author);
 	}
 	if (cmd === 'topAgentInfo') {
 		const res = await getValAgentStats(ign);
@@ -205,12 +218,28 @@ const handleValRequest = async (cmd, ign, author) => {
 	}
 	if (cmd === 'topWeapons') {
 		//use puppeteer and cheerio to get that info since there's no fetch request that I can access for that info
-		return embedSingleInfo({name: 'Top Weapons', value: `${'work in progress'}`}, ign, author);
+		return embedSingleInfo(`${ign}'s Top Weapons`, {name: 'Top Weapons', value: `${'work in progress'}`}, ign, author);
 	}
 	if (cmd === 'topWeaponsInfo') {
-		return embedSingleInfo({name: 'Top Weapons Info', value: `${'work in progress'}`}, ign, author);
+		return embedSingleInfo(`${ign}'s Top Weapons Info`, {name: 'Top Weapons Info', value: `${'work in progress'}`}, ign, author);
 	}
-	//implement command to get someones rank
+	if (cmd === 'rank') {
+		const res = await getValStats(ign);
+		const stats = res.data.data[0].stats;
+
+		if (res.status !== 200) {
+			return res.status;
+		}
+
+		let toDisplay;
+		const tierName = stats.rank.metadata.tierName;
+		if (tierName.startsWith('Immortal') || tierName.startsWith('Radiant')) {
+			toDisplay = tierName.substr(0, tierName.indexOf(' ')) + ' ' + stats.rank.displayValue + 'RR';
+		} else {
+			toDisplay = stats.rank.displayValue;
+		}
+		return embedSingleInfo(`${ign}'s Current Rank`, {name: 'Rank', value: `${toDisplay}`}, ign, author);
+	}
 	//implement command to get someone's peak rank
 	//implement command to get someone's playtime
 	//implement command to get someone's matches played
