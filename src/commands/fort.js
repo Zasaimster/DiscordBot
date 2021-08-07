@@ -5,7 +5,7 @@ const {MessageEmbed} = require('discord.js');
 const handleFnRequest = async (cmd, ign, author) => {
 	if (cmd === 'help') {
 		return `
-			You can get Fortnite stats by using \`-fn <command> <ign>\` or by registering your account with \`-register\` then using \`-fn <command> <ign>\` (replace the brackets with a proper command/ign).\n\nValid fortnite commands are: \n\`-fn stats\`, \`-fn pr\`, \`-fn earnings\`, \`-fn events\`, \`-fn tracker\`
+			You can get Fortnite stats by registering your account with \`-register\` then using \`-fn <command>\` or by using \`-fn <command> <ign>\` (replace the brackets with a proper command/ign).\n\nValid fortnite commands are: \n\`-fn stats\`, \`-fn pr\`, \`-fn earnings\`, \`-fn events\`, \`-fn tracker\`
 		`;
 	}
 

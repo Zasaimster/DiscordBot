@@ -113,7 +113,7 @@ const handleRegistration = async (message) => {
 									.then((collected) => {
 										info.fnId = collected.first().content.trim();
 										message.channel.send(
-											`I'm saving your information, so now you can get your own stats (type -help for more info) :)`
+											`I'm saving your information, so now you can get your own stats (type \`-help\` for more info in the channel you typed \`-register\` in :)`
 										);
 										addUserInfo(info, member);
 									})
