@@ -46,7 +46,7 @@ module.exports = async function (message) {
 		realIgn = ign === '' ? await getFnId(message.author.id) : ign;
 		if (realIgn === '') {
 			let valCommands =
-				'`-val stats`, `-val damagePerRound`, `-val kd`, `-val kad`, `-val last20acc`, `-val last20`, `-val hs%`, `-val win%`, `-val topAgentInfo`, `-val top2AgentInfo`, `-val top3AgentInfo`, `-val topAgent`, `-val top3Agents`, `-val tracker`, `-val topWeapons`, `-val topWeaponsInfo`';
+				'`-val stats`, `-val damagePerRound`, `-val kd`, `-val kad`, `-val last20acc`, `-val last20`, `-val hs%`, `-val win%`, `-val topAgentInfo`, `-val top2AgentInfo`, `-val top3AgentInfo`, `-val topAgent`, `-val top3Agents`, `-val tracker`, `-val topWeapons`, `-val topWeaponsInfo`, `-val rank`, `-val peakRank`, `-val playtime`, `-val matchesPlayed` ';
 			message.channel.send(
 				'Register using `-register` or give me an account by typing `-val <command> <ign>`\n\nValid Valorant commands:\n' + valCommands
 			);

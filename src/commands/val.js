@@ -8,7 +8,7 @@ const handleValRequest = async (cmd, ign, author) => {
 	if (cmd === 'help') {
 		console.log('help');
 		let commandsString =
-			'`-val stats`, `-val damagePerRound`, `-val kd`, `-val kad`, `-val last20acc`, `-val last20`, `-val hs%`, `-val win%`, `-val topAgentInfo`, `-val top2AgentInfo`, `-val top3AgentInfo`, `-val topAgent`, `-val top3Agents`, `-val tracker`, `-val topWeapons`, `-val topWeaponsInfo`';
+			'`-val stats`, `-val damagePerRound`, `-val kd`, `-val kad`, `-val last20acc`, `-val last20`, `-val hs%`, `-val win%`, `-val topAgentInfo`, `-val top2AgentInfo`, `-val top3AgentInfo`, `-val topAgent`, `-val top3Agents`, `-val tracker`, `-val topWeapons`, `-val topWeaponsInfo`, `-val rank`, `-val peakRank`, `-val playtime`, `-val matchesPlayed` ';
 		return `
 			You can get Valorant stats by registering your account with \`-register\` then using \`-val <command>\` or by using \`-val <command> <ign>\` (replace the brackets with a proper command/ign).\n\nValid Valorant commands: \n${commandsString}
 		`;
