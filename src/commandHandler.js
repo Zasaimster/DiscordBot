@@ -32,7 +32,7 @@ module.exports = async function (message) {
 			return;
 		}
 
-		const msg = await handleFnRequest(getPhrase, realIgn, message.author.username);
+		const msg = await handleFnRequest(getPhrase.toLowerCase(), realIgn, message.author.username);
 		message.channel.send(msg);
 
 		return;
@@ -54,7 +54,7 @@ module.exports = async function (message) {
 		}
 		realIgn = ign === '' ? await getValId(message.author.id) : ign;
 
-		const msg = await handleValRequest(getPhrase, realIgn, message.author.username);
+		const msg = await handleValRequest(getPhrase.toLowerCase(), realIgn, message.author.username);
 		message.channel.send(msg);
 		//message.channel.send({embeds: [msg]});
 

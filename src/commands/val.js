@@ -81,7 +81,7 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		return embedSingleInfo(`${ign}'s Comp Stats`, embedInfo, ign, author);
 	}
-	if (cmd === 'damagePerRound') {
+	if (cmd === 'damageperround') {
 		const res = await getValStats(ign);
 		const stats = res.data.data[0].stats;
 
@@ -154,7 +154,7 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		return embedSingleInfo(`${ign}'s Win Percentage`, {name: 'Win %', value: `${stats.matchesWinPct.displayValue}`}, ign, author);
 	}
-	if (cmd === 'topAgentInfo') {
+	if (cmd === 'topagentinfo') {
 		const res = await getValAgentStats(ign);
 		const stats = res.data.data.segments;
 
@@ -166,7 +166,7 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		return embedSingleInfo(`${ign}'s Top Agent`, embedInfo, ign, author);
 	}
-	if (cmd === 'top2AgentInfo') {
+	if (cmd === 'top2agentinfo') {
 		const res = await getValAgentStats(ign);
 		const stats = res.data.data.segments;
 
@@ -178,7 +178,7 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		return embedSingleInfo(`${ign}'s Top Agent`, embedInfo, ign, author);
 	}
-	if (cmd === 'top3AgentInfo') {
+	if (cmd === 'top3agentinfo') {
 		const res = await getValAgentStats(ign);
 		const stats = res.data.data.segments;
 
@@ -190,7 +190,7 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		return embedSingleInfo(`${ign}'s Top Agent`, embedInfo, ign, author);
 	}
-	if (cmd === 'topAgent') {
+	if (cmd === 'topagent') {
 		const res = await getValAgentStats(ign);
 		const stats = res.data.data.segments;
 
@@ -201,7 +201,7 @@ const handleValRequest = async (cmd, ign, author) => {
 		let info = getTop3AgentInfo(stats)[0];
 		return embedSingleInfo(`${ign}'s Top Agent`, {name: `${info.Name}`, value: '\u200B'}, ign, author);
 	}
-	if (cmd === 'top3Agents') {
+	if (cmd === 'top3agents') {
 		const res = await getValAgentStats(ign);
 		const stats = res.data.data.segments;
 
@@ -219,11 +219,11 @@ const handleValRequest = async (cmd, ign, author) => {
 	if (cmd === 'tracker') {
 		return `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(ign))}/overview`;
 	}
-	if (cmd === 'topWeapons') {
+	if (cmd === 'topweapons') {
 		let info = getEmbedInfo(await getTopWeapons(ign));
 		return embedSingleInfo(`${ign}'s Top Weapons`, info, ign, author);
 	}
-	if (cmd === 'topWeaponsInfo') {
+	if (cmd === 'topweaponsinfo') {
 		let info = getTopWeaponsEmbedInfo(await getTopWeaponsInfo(ign));
 		console.log(info);
 		return embedSingleInfo(`${ign}'s Top Weapons Info`, info, ign, author);
@@ -246,7 +246,7 @@ const handleValRequest = async (cmd, ign, author) => {
 		return embedSingleInfo(`${ign}'s Current Rank`, {name: 'Rank', value: `${toDisplay}`}, ign, author);
 	}
 
-	if (cmd === 'peakRank') {
+	if (cmd === 'peakrank') {
 		const res = await getValStats(ign);
 		const stats = res.data.data[0].stats;
 
