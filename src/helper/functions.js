@@ -52,21 +52,12 @@ const prettifyFNStats = ({region, name, platform, points, cashPrize, events, ran
 	return res;
 };
 
-const getSpaces = (index) => {
-	switch (index) {
-		case 0:
-			return 11;
-		case 1:
-			return 10;
-		case 3:
-			return 18;
-		case 4:
-			return 14;
-		case 6:
-			return 11;
-		default:
-			return 7;
+const getSpaces = (num) => {
+	let str = '';
+	for (var i = 0; i < num; i++) {
+		str += `\ `;
 	}
+	return str;
 };
 
 const convertCommandToValidValUser = (args) => {
@@ -91,6 +82,7 @@ const convertCommandToValidValUser = (args) => {
 };
 
 exports.getData = getData;
+exports.getSpaces = getSpaces;
 exports.convertNumberToStringWithCommas = convertNumberToStringWithCommas;
 exports.prettifyFNStats = prettifyFNStats;
 exports.convertCommandToValidValUser = convertCommandToValidValUser;

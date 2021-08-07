@@ -1,5 +1,5 @@
 const {getValStats, getValLast20Stats, getValAgentStats, getLast20Accuracy, getTopWeapons, getTopWeaponsInfo} = require('../scrapers/valScraper');
-const {convertCommandToValidValUser} = require('../helper/functions');
+const {convertCommandToValidValUser, getSpaces} = require('../helper/functions');
 const {MessageEmbed} = require('discord.js');
 const {prop} = require('cheerio/lib/api/attributes');
 
@@ -264,8 +264,27 @@ const handleValRequest = async (cmd, ign, author) => {
 		return embedSingleInfo(`${ign}'s Peak Rank`, {name: 'Peak Rank', value: `${toDisplay}`}, ign, author);
 	}
 
-	//implement command to get someone's playtime
-	//implement command to get someone's matches played
+	if (cmd === 'playtime') {
+		const res = await getValStats(ign);
+		const stats = res.data.data[0].stats;
+
+		if (res.status !== 200) {
+			return res.status;
+		}
+
+		return embedSingleInfo(`${ign}'s Comp Playtime`, {name: 'Time Played', value: `${stats.timePlayed.displayValue}`}, ign, author);
+	}
+
+	if (cmd === 'matchesplayed') {
+		const res = await getValStats(ign);
+		const stats = res.data.data[0].stats;
+
+		if (res.status !== 200) {
+			return res.status;
+		}
+
+		return embedSingleInfo(`${ign}'s Comp Matches Played`, {name: 'Matches Played', value: `${stats.matchesPlayed.displayValue}`}, ign, author);
+	}
 };
 
 const getLast20Info = (matches) => {
