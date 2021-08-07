@@ -5,7 +5,7 @@ client.login(process.env.DISCORDJS_BOT_TOKEN);
 
 //initialize firestore connection
 const admin = require('firebase-admin');
-const serviceAccount = require(`../${process.env.SERVICE_ACCOUNT_KEY}`);
+const serviceAccount = require(process.env.SERVICE_ACCOUNT_KEY);
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
