@@ -1,11 +1,11 @@
-const {convertPRToReadableString, prettifyFNStats, convertCommandToValidValUser} = require('../helper/functions');
+const {convertNumberToStringWithCommas, prettifyFNStats, convertCommandToValidValUser} = require('../helper/functions');
 const {getFnStats} = require('../scrapers/fnScraper');
 const {MessageEmbed} = require('discord.js');
 
 const handleFnRequest = async (cmd, ign, author) => {
 	if (cmd === 'help') {
 		return `
-			You can get Fortnite stats by registering your account with \`-register\` then using \`-fn <command>\` or by using \`-fn <command> <ign>\` (replace the brackets with a proper command/ign).\n\nValid fortnite commands are: \n\`-fn stats\`, \`-fn pr\`, \`-fn earnings\`, \`-fn events\`, \`-fn tracker\`
+			You can get Fortnite stats by registering your account with \`-register\` then using \`-fn <command>\` or by using \`-fn <command> <ign>\` (replace the brackets with a proper command/ign).\n\nValid Fortnite commands: \n\`-fn stats\`, \`-fn pr\`, \`-fn earnings\`, \`-fn events\`, \`-fn tracker\`
 		`;
 	}
 
@@ -25,7 +25,7 @@ const handleFnRequest = async (cmd, ign, author) => {
 		case 'stats':
 			return embedStats(stats.data, ign, author);
 		case 'pr':
-			return embedSingleInfo({name: 'PR', value: `${convertPRToReadableString(stats.data.points)}`}, stats.data, ign, author);
+			return embedSingleInfo({name: 'PR', value: `${convertNumberToStringWithCommas(stats.data.points)}`}, stats.data, ign, author);
 		case 'earnings':
 			return embedSingleInfo({name: 'Earnings', value: `$${stats.data.cashPrize}`}, stats.data, ign, author);
 		case 'events':
@@ -64,8 +64,8 @@ const getFieldsStatsInfo = (stats) => {
 
 	fields.push({name: 'Region', value: stats.region, inline: true});
 	fields.push({name: 'Platform', value: stats.platform, inline: true});
-	fields.push({name: 'PR', value: convertPRToReadableString(stats.points)});
-	fields.push({name: 'Rank', value: stats.rank});
+	fields.push({name: 'PR', value: convertNumberToStringWithCommas(stats.points)});
+	fields.push({name: 'Rank', value: `#${convertNumberToStringWithCommas(stats.rank)}`});
 	fields.push({name: 'Earnings', value: `$${stats.cashPrize}`});
 	fields.push({name: 'Events', value: stats.events});
 

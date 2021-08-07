@@ -16,7 +16,7 @@ const getData = async (url) => {
 		});
 };
 
-const convertPRToReadableString = (pr) => {
+const convertNumberToStringWithCommas = (pr) => {
 	return pr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
@@ -91,6 +91,6 @@ const convertCommandToValidValUser = (args) => {
 };
 
 exports.getData = getData;
-exports.convertPRToReadableString = convertPRToReadableString;
+exports.convertNumberToStringWithCommas = convertNumberToStringWithCommas;
 exports.prettifyFNStats = prettifyFNStats;
 exports.convertCommandToValidValUser = convertCommandToValidValUser;
