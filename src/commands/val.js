@@ -1,6 +1,7 @@
-const {getValStats, getValLast20Stats, getValAgentStats} = require('../scrapers/valScraper');
+const {getValStats, getValLast20Stats, getValAgentStats, getLast20Accuracy, getTopWeapons, getTopWeaponsInfo} = require('../scrapers/valScraper');
 const {convertCommandToValidValUser} = require('../helper/functions');
 const {MessageEmbed} = require('discord.js');
+const {prop} = require('cheerio/lib/api/attributes');
 
 const handleValRequest = async (cmd, ign, author) => {
 	console.log(cmd);
@@ -111,16 +112,10 @@ const handleValRequest = async (cmd, ign, author) => {
 		return embedSingleInfo(`${ign}'s KAD Ratio`, {name: 'KAD Ratio', value: `${stats.kADRatio.displayValue}`}, ign, author);
 	}
 	if (cmd === 'last20acc') {
-		const res = await getValLast20Stats(ign);
-		const matches = res.data.data.matches;
+		let info = getEmbedInfo(await getLast20Accuracy(ign));
+		console.log(info);
 
-		if (res.status !== 200) {
-			return res.status;
-		}
-
-		//let info = getLast20Accuracy(matches);
-
-		return embedSingleInfo(`${ign}'s Accuracy In the Last 20 Matches`, 'this aint work', ign, author);
+		return embedSingleInfo(`${ign}'s Recent Accuracy`, info, ign, author);
 	}
 	if (cmd === 'last20') {
 		const res = await getValLast20Stats(ign);
@@ -225,11 +220,13 @@ const handleValRequest = async (cmd, ign, author) => {
 		return `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(ign))}/overview`;
 	}
 	if (cmd === 'topWeapons') {
-		//use puppeteer and cheerio to get that info since there's no fetch request that I can access for that info
-		return embedSingleInfo(`${ign}'s Top Weapons`, {name: 'Top Weapons', value: `${'work in progress'}`}, ign, author);
+		let info = getEmbedInfo(await getTopWeapons(ign));
+		return embedSingleInfo(`${ign}'s Top Weapons`, info, ign, author);
 	}
 	if (cmd === 'topWeaponsInfo') {
-		return embedSingleInfo(`${ign}'s Top Weapons Info`, {name: 'Top Weapons Info', value: `${'work in progress'}`}, ign, author);
+		let info = getTopWeaponsEmbedInfo(await getTopWeaponsInfo(ign));
+		console.log(info);
+		return embedSingleInfo(`${ign}'s Top Weapons Info`, info, ign, author);
 	}
 	if (cmd === 'rank') {
 		const res = await getValStats(ign);
@@ -269,10 +266,6 @@ const handleValRequest = async (cmd, ign, author) => {
 
 	//implement command to get someone's playtime
 	//implement command to get someone's matches played
-};
-
-const getLast20Accuracy = (matches) => {
-	//puppeteer + cheerio this
 };
 
 const getLast20Info = (matches) => {
@@ -369,6 +362,21 @@ const getEmbedInfo = (info) => {
 	let embedInfo = [];
 	for (const property in info) {
 		embedInfo.push({name: `${property}`, value: info[property]});
+	}
+
+	return embedInfo;
+};
+
+const getTopWeaponsEmbedInfo = (info) => {
+	let embedInfo = [];
+
+	for (const gun in info) {
+		let value = '';
+		for (const property in info[gun]) {
+			value += `${property}: **${info[gun][property]}**\n`;
+		}
+
+		embedInfo.push({name: `${gun}`, value: `${value}`});
 	}
 
 	return embedInfo;
