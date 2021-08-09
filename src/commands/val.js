@@ -335,7 +335,7 @@ const getLast20Info = (matches) => {
 	return {
 		'Headshot %': `${hs.toFixed(1)}%`,
 		'Win - Loss': `${wins} - ${losses}`,
-		'Win %': `${(wins / losses).toFixed(1)}`,
+		'Win %': `${((wins / (wins + losses)) * 100).toFixed(1)}`,
 		'KD Ratio': kd.toFixed(2),
 		ADR: adr.toFixed(0),
 	};
