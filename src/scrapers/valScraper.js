@@ -72,7 +72,7 @@ const getTopWeapons = async (name) => {
 		});
 		const page = await browser.newPage();
 		let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
-		await page.goto(url, {waitUntil: 'networkidle2'});
+		await page.goto(url, {waitUntil: 'load', timeout: 0});
 
 		let results = await page.evaluate(() => {
 			let weapon1 = document.querySelector('div[class="top-weapons__weapons"] > div > div > div').innerText;
@@ -106,7 +106,7 @@ const getTopWeaponsInfo = async (name) => {
 		});
 		const page = await browser.newPage();
 		let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
-		await page.goto(url, {waitUntil: 'networkidle2'});
+		await page.goto(url, {waitUntil: 'load', timeout: 0});
 
 		let results = await page.evaluate(() => {
 			let weapon1 = document.querySelector('div[class="top-weapons__weapons"] > div > div > div').innerText;
