@@ -73,7 +73,7 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		//embedInfo[14].inline;
 
-		console.log(`overall stats: ${stats.embedInfo.displayValue}`);
+		console.log(`overall stats: ${embedInfo}`);
 
 		return embedSingleInfo(`${ign}'s Comp Stats`, embedInfo, ign, author);
 	}
@@ -256,9 +256,8 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		let toDisplay;
 		const tierName = stats.rank.metadata.tierName;
-		console.log(stats.rank.metadata);
 		if (tierName.startsWith('Immortal') || tierName.startsWith('Radiant')) {
-			toDisplay = tierName.substr(0, tierName.indexOf(' ')) + ' ' + stats.rank.displayValue + 'RR';
+			toDisplay = tierName.split(' ')[0] + ' ' + stats.rank.displayValue + 'RR';
 		} else {
 			toDisplay = stats.rank.displayValue;
 		}
@@ -275,10 +274,9 @@ const handleValRequest = async (cmd, ign, author) => {
 		}
 
 		let toDisplay;
-		const tierName = stats.rank.metadata.tierName;
-		console.log(stats.rank.metadata);
+		const tierName = stats.peakRank.metadata.tierName;
 		if (tierName.startsWith('Immortal') || tierName.startsWith('Radiant')) {
-			toDisplay = tierName.substr(0, tierName.indexOf(' ')) + ' ' + stats.rank.displayValue + 'RR' + ', ' + stats.peakRank.metadata.actName;
+			toDisplay = tierName.split(' ')[0] + ' ' + stats.peakRank.displayValue + 'RR' + ', ' + stats.peakRank.metadata.actName;
 		} else {
 			toDisplay = `${stats.peakRank.displayValue}, ${stats.peakRank.metadata.actName}`;
 		}
