@@ -1,10 +1,8 @@
 const {getValStats, getValLast20Stats, getValAgentStats, getLast20Accuracy, getTopWeapons, getTopWeaponsInfo} = require('../scrapers/valScraper');
 const {convertCommandToValidValUser, getSpaces} = require('../helper/functions');
 const {MessageEmbed} = require('discord.js');
-const {prop} = require('cheerio/lib/api/attributes');
 
 const handleValRequest = async (cmd, ign, author) => {
-	console.log(`${author} called -val ${cmd}`);
 	if (cmd === 'help') {
 		let commandsString =
 			'`-val stats`, `-val damagePerRound`, `-val kd`, `-val kad`, `-val last20acc`, `-val last20`, `-val hs%`, `-val win%`, `-val topAgentInfo`, `-val top2AgentInfo`, `-val top3AgentInfo`, `-val topAgent`, `-val top3Agents`, `-val tracker`, `-val topWeapons`, `-val topWeaponsInfo`, `-val rank`, `-val peakRank`, `-val playtime`, `-val matchesPlayed` ';
@@ -75,6 +73,8 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		//embedInfo[14].inline;
 
+		console.log(`overall stats: ${stats.embedInfo.displayValue}`);
+
 		return embedSingleInfo(`${ign}'s Comp Stats`, embedInfo, ign, author);
 	}
 	if (cmd === 'damageperround') {
@@ -84,6 +84,8 @@ const handleValRequest = async (cmd, ign, author) => {
 		if (res.status !== 200) {
 			return res.status;
 		}
+
+		console.log(`DPM: ${stats.damagePerRound.displayValue}`);
 
 		return embedSingleInfo(`${ign}'s Damage Per Round`, {name: 'Damage Per Round', value: `${stats.damagePerRound.displayValue}`}, ign, author);
 	}
@@ -95,6 +97,8 @@ const handleValRequest = async (cmd, ign, author) => {
 			return res.status;
 		}
 
+		console.log(`KD: ${stats.kdRatio.displayValue}`);
+
 		return embedSingleInfo(`${ign}'s KD Ratio`, {name: 'K/D Ratio', value: `${stats.kDRatio.displayValue}`}, ign, author);
 	}
 	if (cmd === 'kad') {
@@ -105,10 +109,14 @@ const handleValRequest = async (cmd, ign, author) => {
 			return res.status;
 		}
 
+		console.log(`KAD: ${stats.kDRatio.displayValue}`);
+
 		return embedSingleInfo(`${ign}'s KAD Ratio`, {name: 'KAD Ratio', value: `${stats.kADRatio.displayValue}`}, ign, author);
 	}
 	if (cmd === 'last20acc') {
 		let info = getEmbedInfo(await getLast20Accuracy(ign));
+
+		console.log(`last 20 accuracy: ${info}`);
 
 		return embedSingleInfo(`${ign}'s Recent Accuracy`, info, ign, author);
 	}
@@ -122,6 +130,8 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		let embedInfo = getEmbedInfo(getLast20Info(matches));
 
+		console.log(`last 20 info: ${embedInfo}`);
+
 		return embedSingleInfo(`${ign}'s Last 20 Matches`, embedInfo, ign, author);
 	}
 	if (cmd === 'hs%') {
@@ -131,6 +141,8 @@ const handleValRequest = async (cmd, ign, author) => {
 		if (res.status !== 200) {
 			return res.status;
 		}
+
+		console.log(`hs%: ${stats.headshotsPercentage.displayValue}`);
 
 		return embedSingleInfo(
 			`${ign}'s Headshot Percentage`,
@@ -147,6 +159,7 @@ const handleValRequest = async (cmd, ign, author) => {
 			return res.status;
 		}
 
+		console.log(`win%: ${stats.matchesWinPct.displayValue}`);
 		return embedSingleInfo(`${ign}'s Win Percentage`, {name: 'Win %', value: `${stats.matchesWinPct.displayValue}`}, ign, author);
 	}
 	if (cmd === 'topagentinfo') {
@@ -159,6 +172,7 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		let embedInfo = getEmbedInfo(getTop3AgentInfo(stats)[0]);
 
+		console.log(`Best agent: ${embedInfo}`);
 		return embedSingleInfo(`${ign}'s Top Agent`, embedInfo, ign, author);
 	}
 	if (cmd === 'top2agentinfo') {
@@ -170,6 +184,8 @@ const handleValRequest = async (cmd, ign, author) => {
 		}
 
 		let embedInfo = getEmbedInfo(getTop3AgentInfo(stats)[1]);
+
+		console.log(`2nd best agent: ${embedInfo}`);
 
 		return embedSingleInfo(`${ign}'s Top Agent`, embedInfo, ign, author);
 	}
@@ -183,6 +199,7 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		let embedInfo = getEmbedInfo(getTop3AgentInfo(stats)[2]);
 
+		console.log(`3rd best agent: ${embedInfo}`);
 		return embedSingleInfo(`${ign}'s Top Agent`, embedInfo, ign, author);
 	}
 	if (cmd === 'topagent') {
@@ -194,6 +211,7 @@ const handleValRequest = async (cmd, ign, author) => {
 		}
 
 		let info = getTop3AgentInfo(stats)[0];
+		console.log(`top agent: ${info.Name}`);
 		return embedSingleInfo(`${ign}'s Top Agent`, {name: `${info.Name}`, value: '\u200B'}, ign, author);
 	}
 	if (cmd === 'top3agents') {
@@ -209,6 +227,8 @@ const handleValRequest = async (cmd, ign, author) => {
 		embedInfo.push({name: '#1', value: `${info[0].Name}`});
 		embedInfo.push({name: '#2', value: `${info[1].Name}`});
 		embedInfo.push({name: '#3', value: `${info[2].Name}`});
+
+		console.log(`top 3 agent info: ${embedInfo}`);
 		return embedSingleInfo(`${ign}'s Top 3 Agents`, embedInfo, ign, author);
 	}
 	if (cmd === 'tracker') {
@@ -216,11 +236,14 @@ const handleValRequest = async (cmd, ign, author) => {
 	}
 	if (cmd === 'topweapons') {
 		let info = getEmbedInfo(await getTopWeapons(ign));
+
+		console.log(`top weapons: ${info}`);
 		return embedSingleInfo(`${ign}'s Top Weapons`, info, ign, author);
 	}
 	if (cmd === 'topweaponsinfo') {
 		let info = getTopWeaponsEmbedInfo(await getTopWeaponsInfo(ign));
 
+		console.log(`top weapons info: ${info}`);
 		return embedSingleInfo(`${ign}'s Top Weapons Info`, info, ign, author);
 	}
 	if (cmd === 'rank') {
@@ -233,11 +256,13 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		let toDisplay;
 		const tierName = stats.rank.metadata.tierName;
+		console.log(stats.rank.metadata);
 		if (tierName.startsWith('Immortal') || tierName.startsWith('Radiant')) {
 			toDisplay = tierName.substr(0, tierName.indexOf(' ')) + ' ' + stats.rank.displayValue + 'RR';
 		} else {
 			toDisplay = stats.rank.displayValue;
 		}
+		console.log(`rank: ${toDisplay}`);
 		return embedSingleInfo(`${ign}'s Current Rank`, {name: 'Rank', value: `${toDisplay}`}, ign, author);
 	}
 
@@ -251,11 +276,14 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		let toDisplay;
 		const tierName = stats.rank.metadata.tierName;
+		console.log(stats.rank.metadata);
 		if (tierName.startsWith('Immortal') || tierName.startsWith('Radiant')) {
 			toDisplay = tierName.substr(0, tierName.indexOf(' ')) + ' ' + stats.rank.displayValue + 'RR' + ', ' + stats.peakRank.metadata.actName;
 		} else {
 			toDisplay = `${stats.peakRank.displayValue}, ${stats.peakRank.metadata.actName}`;
 		}
+
+		console.log(`peak rank: ${toDisplay}`);
 		return embedSingleInfo(`${ign}'s Peak Rank`, {name: 'Peak Rank', value: `${toDisplay}`}, ign, author);
 	}
 
@@ -267,6 +295,8 @@ const handleValRequest = async (cmd, ign, author) => {
 			return res.status;
 		}
 
+		console.log(`time played: ${stats.timePlayed.displayValue}`);
+
 		return embedSingleInfo(`${ign}'s Comp Playtime`, {name: 'Time Played', value: `${stats.timePlayed.displayValue}`}, ign, author);
 	}
 
@@ -277,6 +307,8 @@ const handleValRequest = async (cmd, ign, author) => {
 		if (res.status !== 200) {
 			return res.status;
 		}
+
+		console.log(`matches played: ${stats.matchesPlayed.displayValue}`);
 
 		return embedSingleInfo(`${ign}'s Comp Matches Played`, {name: 'Matches Played', value: `${stats.matchesPlayed.displayValue}`}, ign, author);
 	}

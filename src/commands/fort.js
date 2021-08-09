@@ -12,10 +12,12 @@ const handleFnRequest = async (cmd, ign, author) => {
 	const stats = await getFnStats(ign);
 
 	if (stats === undefined) {
+		console.log('invalid fn ID');
 		return 'Invalid Fortnite ID';
 	}
 
 	if (stats.status === 202) {
+		console.log('error status 202');
 		return `There was an error getting this account's info. This account may not exist, there may be no competitive history on this account, or there may be some other issue. Sorry about that\n\nYou can find more info about this account at https://fortnitetracker.com/profile/all/${encodeURI(
 			ign
 		)}/events`;

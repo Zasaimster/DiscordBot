@@ -32,17 +32,11 @@ const getLast20Accuracy = async (name) => {
 		args: ['--no-sandbox', '--disable-setuid-sandbox'],
 	});
 	try {
-		console.log('in last 20 accuracy function');
-		console.log('browser is setup');
 		const page = await browser.newPage();
 		let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
-		console.log('page is now laoded, going to: ', url);
 		await page.goto(url, {waitUntil: 'load', timeout: 0});
 
-		console.log('page is now at the url', url);
-
 		let results = await page.evaluate(() => {
-			console.log('in page.evaluate()');
 			let hs = document.querySelector('table[class="accuracy__stats"] > tbody > tr >td').innerText;
 			let body = document.querySelector('table[class="accuracy__stats"] > tbody > tr:nth-child(2) >td').innerText;
 			let legs = document.querySelector('table[class="accuracy__stats"] > tbody > tr:nth-child(3) >td').innerText;
@@ -56,11 +50,10 @@ const getLast20Accuracy = async (name) => {
 		await browser.close();
 		return results;
 	} catch (err) {
-		console.log('err last20', err);
+		console.log('err in last20acc', err);
 		await browser.close();
 		return 'Error';
 	} finally {
-		console.log('finally last20');
 		await browser.close();
 	}
 };
@@ -91,11 +84,10 @@ const getTopWeapons = async (name) => {
 
 		return results;
 	} catch (err) {
-		console.log('err topweapons', err);
+		console.log('err in topweapons', err);
 		await browser.close();
 		return 'Error';
 	} finally {
-		console.log('finally topweapons');
 		await browser.close();
 	}
 };
@@ -172,11 +164,10 @@ const getTopWeaponsInfo = async (name) => {
 
 		return results;
 	} catch (err) {
-		console.log('err topweaponsinfo', err);
+		console.log('err in topweaponsinfo', err);
 		await browser.close();
 		return 'Error';
 	} finally {
-		console.log('finally topweaponsinfo');
 		await browser.close();
 	}
 };
