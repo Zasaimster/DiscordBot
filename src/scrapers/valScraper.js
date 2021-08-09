@@ -30,7 +30,6 @@ const getValAgentStats = async (name) => {
 const getLast20Accuracy = async (name) => {
 	const browser = await puppeteer.launch({
 		headless: true,
-		executablePath: '/usr/bin/chromium-browser',
 	});
 	const page = await browser.newPage();
 	let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
