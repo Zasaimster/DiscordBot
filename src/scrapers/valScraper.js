@@ -48,6 +48,7 @@ const getLast20Accuracy = async (name) => {
 		};
 	});
 
+	console.log(results);
 	return results;
 };
 
