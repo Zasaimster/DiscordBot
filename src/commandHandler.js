@@ -24,7 +24,7 @@ module.exports = async function (message) {
 			return;
 		}
 		realIgn = ign === '' ? await getFnId(message.author.id) : ign;
-		console.log(realIgn);
+
 		if (realIgn === '') {
 			message.channel.send(
 				'Register using `-register` or give me an account by typing `-fn <command> <ign>`\n\nValid Fortnite commands: \n`-fn stats`, `-fn pr`, `-fn earnings`, `-fn events`, `-fn tracker`'

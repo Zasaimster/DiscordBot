@@ -27,7 +27,7 @@ const db = admin.firestore();
 
 //initialize discord bot
 client.on('ready', () => {
-	console.log('ZasBot is online!');
+	console.log('ZasBot is online!\n');
 
 	//silver to diamond: https://i.imgur.com/THA3rVI.jpg
 	//monkey: https://i.imgur.com/othLBaA.png

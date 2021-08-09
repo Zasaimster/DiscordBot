@@ -7,7 +7,6 @@ agent info: https://api.tracker.gg/api/v2/valorant/standard/profile/riot/zas%238
 */
 
 const getValStats = async (name) => {
-	console.log('in get val stats');
 	let url = `https://api.tracker.gg/api/v2/valorant/standard/profile/riot/${convertCommandToValidValUser(
 		encodeURI(name)
 	)}/segments/playlist?key=competitive`;
@@ -28,15 +27,21 @@ const getValAgentStats = async (name) => {
 };
 
 const getLast20Accuracy = async (name) => {
+	console.log('in last 20 accuracy function');
 	const browser = await puppeteer.launch({
 		headless: true,
 		args: ['--no-sandbox', '--disable-setuid-sandbox'],
 	});
+	console.log('browser is setup');
 	const page = await browser.newPage();
+	console.log('page is now laoded');
 	let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
 	await page.goto(url, {waitUntil: 'networkidle2'});
 
+	console.log('page is now at the url', url);
+
 	let results = await page.evaluate(() => {
+		console.log('in page.evaluate()');
 		let hs = document.querySelector('table[class="accuracy__stats"] > tbody > tr >td').innerText;
 		let body = document.querySelector('table[class="accuracy__stats"] > tbody > tr:nth-child(2) >td').innerText;
 		let legs = document.querySelector('table[class="accuracy__stats"] > tbody > tr:nth-child(3) >td').innerText;
@@ -47,6 +52,7 @@ const getLast20Accuracy = async (name) => {
 			'Legshot %': legs,
 		};
 	});
+	console.log(results);
 	return results;
 };
 

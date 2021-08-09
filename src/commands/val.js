@@ -4,9 +4,8 @@ const {MessageEmbed} = require('discord.js');
 const {prop} = require('cheerio/lib/api/attributes');
 
 const handleValRequest = async (cmd, ign, author) => {
-	console.log(cmd);
+	console.log(`${author} called -val ${cmd}`);
 	if (cmd === 'help') {
-		console.log('help');
 		let commandsString =
 			'`-val stats`, `-val damagePerRound`, `-val kd`, `-val kad`, `-val last20acc`, `-val last20`, `-val hs%`, `-val win%`, `-val topAgentInfo`, `-val top2AgentInfo`, `-val top3AgentInfo`, `-val topAgent`, `-val top3Agents`, `-val tracker`, `-val topWeapons`, `-val topWeaponsInfo`, `-val rank`, `-val peakRank`, `-val playtime`, `-val matchesPlayed` ';
 		return `
@@ -57,10 +56,9 @@ const handleValRequest = async (cmd, ign, author) => {
 			Aces: stats.aces.displayValue,
 			'Highest Kill Game': stats.mostKillsInMatch.displayValue,
 		};
-		console.log(statsInfo);
 
 		let embedInfo = getEmbedInfo(statsInfo);
-		console.log(embedInfo);
+
 		embedInfo[0].inline = true;
 		embedInfo[1].inline = true;
 
@@ -76,8 +74,6 @@ const handleValRequest = async (cmd, ign, author) => {
 		embedInfo[13].inline = true;
 
 		//embedInfo[14].inline;
-
-		console.log(embedInfo);
 
 		return embedSingleInfo(`${ign}'s Comp Stats`, embedInfo, ign, author);
 	}
@@ -113,7 +109,6 @@ const handleValRequest = async (cmd, ign, author) => {
 	}
 	if (cmd === 'last20acc') {
 		let info = getEmbedInfo(await getLast20Accuracy(ign));
-		console.log(info);
 
 		return embedSingleInfo(`${ign}'s Recent Accuracy`, info, ign, author);
 	}
@@ -225,7 +220,7 @@ const handleValRequest = async (cmd, ign, author) => {
 	}
 	if (cmd === 'topweaponsinfo') {
 		let info = getTopWeaponsEmbedInfo(await getTopWeaponsInfo(ign));
-		console.log(info);
+
 		return embedSingleInfo(`${ign}'s Top Weapons Info`, info, ign, author);
 	}
 	if (cmd === 'rank') {
@@ -293,7 +288,7 @@ const getLast20Info = (matches) => {
 	for (const matchInfo of matches) {
 		let match = matchInfo.segments[0];
 		hs += match.stats.headshotsPercentage.value;
-		console.log(hs);
+
 		if (match.metadata.hasWon) {
 			wins++;
 		} else {
@@ -302,7 +297,7 @@ const getLast20Info = (matches) => {
 		kd += match.stats.kdRatio.value;
 		adr += match.stats.damagePerRound.value;
 	}
-	console.log(hs);
+
 	hs /= matches.length;
 	//let winLoss = wins / losses;
 	kd /= matches.length;

@@ -4,7 +4,7 @@ const {MessageEmbed} = require('discord.js');
 require('dotenv').config();
 
 const getData = async (url) => {
-	console.log(url);
+	//console.log(url);
 	return await axios
 		.get(url, {
 			headers: {
@@ -70,7 +70,7 @@ const convertCommandToValidValUser = (args) => {
 			user += args[i];
 		}
 	}
-	console.log(user);
+
 	//now go through user and replace the # with %23
 	for (i = 0; i < user.length; i++) {
 		if (user[i] === '#') {
