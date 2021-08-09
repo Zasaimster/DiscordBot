@@ -27,12 +27,12 @@ const getValAgentStats = async (name) => {
 };
 
 const getLast20Accuracy = async (name) => {
+	const browser = await puppeteer.launch({
+		headless: true,
+		args: ['--no-sandbox', '--disable-setuid-sandbox'],
+	});
 	try {
 		console.log('in last 20 accuracy function');
-		const browser = await puppeteer.launch({
-			headless: true,
-			args: ['--no-sandbox', '--disable-setuid-sandbox'],
-		});
 		console.log('browser is setup');
 		const page = await browser.newPage();
 		let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
@@ -56,20 +56,21 @@ const getLast20Accuracy = async (name) => {
 		await browser.close();
 		return results;
 	} catch (err) {
-		console.log(err);
+		console.log('err last20', err);
 		await browser.close();
 		return 'Error';
 	} finally {
+		console.log('finally last20');
 		await browser.close();
 	}
 };
 
 const getTopWeapons = async (name) => {
+	const browser = await puppeteer.launch({
+		headless: true,
+		args: ['--no-sandbox', '--disable-setuid-sandbox'],
+	});
 	try {
-		const browser = await puppeteer.launch({
-			headless: true,
-			args: ['--no-sandbox', '--disable-setuid-sandbox'],
-		});
 		const page = await browser.newPage();
 		let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
 		await page.goto(url, {waitUntil: 'load', timeout: 0});
@@ -90,20 +91,22 @@ const getTopWeapons = async (name) => {
 
 		return results;
 	} catch (err) {
-		console.log(err);
+		console.log('err topweapons', err);
 		await browser.close();
 		return 'Error';
 	} finally {
+		console.log('finally topweapons');
 		await browser.close();
 	}
 };
 
 const getTopWeaponsInfo = async (name) => {
+	const browser = await puppeteer.launch({
+		headless: true,
+		args: ['--no-sandbox', '--disable-setuid-sandbox'],
+	});
+
 	try {
-		const browser = await puppeteer.launch({
-			headless: true,
-			args: ['--no-sandbox', '--disable-setuid-sandbox'],
-		});
 		const page = await browser.newPage();
 		let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
 		await page.goto(url, {waitUntil: 'load', timeout: 0});
@@ -169,10 +172,11 @@ const getTopWeaponsInfo = async (name) => {
 
 		return results;
 	} catch (err) {
-		console.log(err);
+		console.log('err topweaponsinfo', err);
 		await browser.close();
 		return 'Error';
 	} finally {
+		console.log('finally topweaponsinfo');
 		await browser.close();
 	}
 };
