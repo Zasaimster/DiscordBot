@@ -30,7 +30,7 @@ const getValAgentStats = async (name) => {
 const getLast20Accuracy = async (name) => {
 	const browser = await puppeteer.launch({
 		headless: true,
-		args: ['--no-sandbox', '--disable-setuid-sandbox'],
+		args: ['--no-sandbox'],
 	});
 	const page = await browser.newPage();
 	let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
@@ -47,8 +47,6 @@ const getLast20Accuracy = async (name) => {
 			'Legshot %': legs,
 		};
 	});
-
-	console.log(results);
 	return results;
 };
 
