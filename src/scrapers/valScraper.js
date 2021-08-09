@@ -30,7 +30,7 @@ const getValAgentStats = async (name) => {
 const getLast20Accuracy = async (name) => {
 	const browser = await puppeteer.launch({
 		headless: true,
-		args: ['--no-sandbox'],
+		args: ['--no-sandbox', '--disable-setuid-sandbox'],
 	});
 	const page = await browser.newPage();
 	let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
@@ -53,7 +53,7 @@ const getLast20Accuracy = async (name) => {
 const getTopWeapons = async (name) => {
 	const browser = await puppeteer.launch({
 		headless: true,
-		executablePath: '/usr/bin/chromium-browser',
+		args: ['--no-sandbox', '--disable-setuid-sandbox'],
 	});
 	const page = await browser.newPage();
 	let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
@@ -77,7 +77,7 @@ const getTopWeapons = async (name) => {
 const getTopWeaponsInfo = async (name) => {
 	const browser = await puppeteer.launch({
 		headless: true,
-		executablePath: '/usr/bin/chromium-browser',
+		args: ['--no-sandbox', '--disable-setuid-sandbox'],
 	});
 	const page = await browser.newPage();
 	let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
