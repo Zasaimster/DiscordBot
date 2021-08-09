@@ -52,7 +52,7 @@ const getLast20Accuracy = async (name) => {
 			'Legshot %': legs,
 		};
 	});
-	console.log(results);
+	await browser.close();
 	return results;
 };
 
@@ -76,6 +76,8 @@ const getTopWeapons = async (name) => {
 			'Gun #3': weapon3,
 		};
 	});
+
+	await browser.close();
 
 	return results;
 };
@@ -141,6 +143,8 @@ const getTopWeaponsInfo = async (name) => {
 			},
 		};
 	});
+
+	await browser.close();
 
 	return results;
 };
