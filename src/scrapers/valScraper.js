@@ -34,9 +34,9 @@ const getLast20Accuracy = async (name) => {
 	});
 	console.log('browser is setup');
 	const page = await browser.newPage();
-	console.log('page is now laoded');
 	let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
-	await page.goto(url, {waitUntil: 'networkidle2'});
+	console.log('page is now laoded, going to: ', url);
+	await page.goto(url, {waitUntil: 'load', timeout: 0});
 
 	console.log('page is now at the url', url);
 
