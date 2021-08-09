@@ -27,126 +27,154 @@ const getValAgentStats = async (name) => {
 };
 
 const getLast20Accuracy = async (name) => {
-	console.log('in last 20 accuracy function');
-	const browser = await puppeteer.launch({
-		headless: true,
-		args: ['--no-sandbox', '--disable-setuid-sandbox'],
-	});
-	console.log('browser is setup');
-	const page = await browser.newPage();
-	let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
-	console.log('page is now laoded, going to: ', url);
-	await page.goto(url, {waitUntil: 'load', timeout: 0});
+	try {
+		console.log('in last 20 accuracy function');
+		const browser = await puppeteer.launch({
+			headless: true,
+			args: ['--no-sandbox', '--disable-setuid-sandbox'],
+		});
+		console.log('browser is setup');
+		const page = await browser.newPage();
+		let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
+		console.log('page is now laoded, going to: ', url);
+		await page.goto(url, {waitUntil: 'load', timeout: 0});
 
-	console.log('page is now at the url', url);
+		console.log('page is now at the url', url);
 
-	let results = await page.evaluate(() => {
-		console.log('in page.evaluate()');
-		let hs = document.querySelector('table[class="accuracy__stats"] > tbody > tr >td').innerText;
-		let body = document.querySelector('table[class="accuracy__stats"] > tbody > tr:nth-child(2) >td').innerText;
-		let legs = document.querySelector('table[class="accuracy__stats"] > tbody > tr:nth-child(3) >td').innerText;
+		let results = await page.evaluate(() => {
+			console.log('in page.evaluate()');
+			let hs = document.querySelector('table[class="accuracy__stats"] > tbody > tr >td').innerText;
+			let body = document.querySelector('table[class="accuracy__stats"] > tbody > tr:nth-child(2) >td').innerText;
+			let legs = document.querySelector('table[class="accuracy__stats"] > tbody > tr:nth-child(3) >td').innerText;
 
-		return {
-			'Headshot %': hs,
-			'Bodyshot %': body,
-			'Legshot %': legs,
-		};
-	});
-	await browser.close();
-	return results;
+			return {
+				'Headshot %': hs,
+				'Bodyshot %': body,
+				'Legshot %': legs,
+			};
+		});
+		await browser.close();
+		return results;
+	} catch (err) {
+		console.log(err);
+		await browser.close();
+		return 'Error';
+	} finally {
+		await browser.close();
+	}
 };
 
 const getTopWeapons = async (name) => {
-	const browser = await puppeteer.launch({
-		headless: true,
-		args: ['--no-sandbox', '--disable-setuid-sandbox'],
-	});
-	const page = await browser.newPage();
-	let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
-	await page.goto(url, {waitUntil: 'networkidle2'});
+	try {
+		const browser = await puppeteer.launch({
+			headless: true,
+			args: ['--no-sandbox', '--disable-setuid-sandbox'],
+		});
+		const page = await browser.newPage();
+		let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
+		await page.goto(url, {waitUntil: 'networkidle2'});
 
-	let results = await page.evaluate(() => {
-		let weapon1 = document.querySelector('div[class="top-weapons__weapons"] > div > div > div').innerText;
-		let weapon2 = document.querySelector('div[class="top-weapons__weapons"] > div:nth-child(2) > div > div').innerText;
-		let weapon3 = document.querySelector('div[class="top-weapons__weapons"] > div:nth-child(3) > div > div').innerText;
+		let results = await page.evaluate(() => {
+			let weapon1 = document.querySelector('div[class="top-weapons__weapons"] > div > div > div').innerText;
+			let weapon2 = document.querySelector('div[class="top-weapons__weapons"] > div:nth-child(2) > div > div').innerText;
+			let weapon3 = document.querySelector('div[class="top-weapons__weapons"] > div:nth-child(3) > div > div').innerText;
 
-		return {
-			'Gun #1': weapon1,
-			'Gun #2': weapon2,
-			'Gun #3': weapon3,
-		};
-	});
+			return {
+				'Gun #1': weapon1,
+				'Gun #2': weapon2,
+				'Gun #3': weapon3,
+			};
+		});
 
-	await browser.close();
+		await browser.close();
 
-	return results;
+		return results;
+	} catch (err) {
+		console.log(err);
+		await browser.close();
+		return 'Error';
+	} finally {
+		await browser.close();
+	}
 };
 
 const getTopWeaponsInfo = async (name) => {
-	const browser = await puppeteer.launch({
-		headless: true,
-		args: ['--no-sandbox', '--disable-setuid-sandbox'],
-	});
-	const page = await browser.newPage();
-	let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
-	await page.goto(url, {waitUntil: 'networkidle2'});
+	try {
+		const browser = await puppeteer.launch({
+			headless: true,
+			args: ['--no-sandbox', '--disable-setuid-sandbox'],
+		});
+		const page = await browser.newPage();
+		let url = `https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(name))}/overview`;
+		await page.goto(url, {waitUntil: 'networkidle2'});
 
-	let results = await page.evaluate(() => {
-		let weapon1 = document.querySelector('div[class="top-weapons__weapons"] > div > div > div').innerText;
-		let weapon1Hs = document.querySelector('div[class="top-weapons__weapons"] > div > div:nth-child(2) > div > span').innerText;
-		let weapon1Body = document.querySelector('div[class="top-weapons__weapons"] > div > div:nth-child(2) > div > span:nth-child(2)').innerText;
-		let weapon1Legs = document.querySelector('div[class="top-weapons__weapons"] > div > div:nth-child(2) > div > span:nth-child(3)').innerText;
-		let weapon1Kills = document.querySelector('div[class="top-weapons__weapons"] > div > div:nth-child(3) > span:nth-child(2)').innerText;
+		let results = await page.evaluate(() => {
+			let weapon1 = document.querySelector('div[class="top-weapons__weapons"] > div > div > div').innerText;
+			let weapon1Hs = document.querySelector('div[class="top-weapons__weapons"] > div > div:nth-child(2) > div > span').innerText;
+			let weapon1Body = document.querySelector(
+				'div[class="top-weapons__weapons"] > div > div:nth-child(2) > div > span:nth-child(2)'
+			).innerText;
+			let weapon1Legs = document.querySelector(
+				'div[class="top-weapons__weapons"] > div > div:nth-child(2) > div > span:nth-child(3)'
+			).innerText;
+			let weapon1Kills = document.querySelector('div[class="top-weapons__weapons"] > div > div:nth-child(3) > span:nth-child(2)').innerText;
 
-		let weapon2 = document.querySelector('div[class="top-weapons__weapons"] > div:nth-child(2) > div > div').innerText;
-		let weapon2Hs = document.querySelector('div[class="top-weapons__weapons"] > div:nth-child(2) > div:nth-child(2) > div > span').innerText;
-		let weapon2Body = document.querySelector(
-			'div[class="top-weapons__weapons"] > div:nth-child(2) > div:nth-child(2) > div > span:nth-child(2)'
-		).innerText;
-		let weapon2Legs = document.querySelector(
-			'div[class="top-weapons__weapons"] > div:nth-child(2) > div:nth-child(2) > div > span:nth-child(3)'
-		).innerText;
-		let weapon2Kills = document.querySelector(
-			'div[class="top-weapons__weapons"] > div:nth-child(2) > div:nth-child(3) > span:nth-child(2)'
-		).innerText;
+			let weapon2 = document.querySelector('div[class="top-weapons__weapons"] > div:nth-child(2) > div > div').innerText;
+			let weapon2Hs = document.querySelector('div[class="top-weapons__weapons"] > div:nth-child(2) > div:nth-child(2) > div > span').innerText;
+			let weapon2Body = document.querySelector(
+				'div[class="top-weapons__weapons"] > div:nth-child(2) > div:nth-child(2) > div > span:nth-child(2)'
+			).innerText;
+			let weapon2Legs = document.querySelector(
+				'div[class="top-weapons__weapons"] > div:nth-child(2) > div:nth-child(2) > div > span:nth-child(3)'
+			).innerText;
+			let weapon2Kills = document.querySelector(
+				'div[class="top-weapons__weapons"] > div:nth-child(2) > div:nth-child(3) > span:nth-child(2)'
+			).innerText;
 
-		let weapon3 = document.querySelector('div[class="top-weapons__weapons"] > div:nth-child(3) > div > div').innerText;
-		let weapon3Hs = document.querySelector('div[class="top-weapons__weapons"] > div:nth-child(3) > div:nth-child(2) > div > span').innerText;
-		let weapon3Body = document.querySelector(
-			'div[class="top-weapons__weapons"] > div:nth-child(3) > div:nth-child(2) > div > span:nth-child(2)'
-		).innerText;
-		let weapon3Legs = document.querySelector(
-			'div[class="top-weapons__weapons"] > div:nth-child(3) > div:nth-child(2) > div > span:nth-child(3)'
-		).innerText;
-		let weapon3Kills = document.querySelector(
-			'div[class="top-weapons__weapons"] > div:nth-child(3) > div:nth-child(3) > span:nth-child(2)'
-		).innerText;
+			let weapon3 = document.querySelector('div[class="top-weapons__weapons"] > div:nth-child(3) > div > div').innerText;
+			let weapon3Hs = document.querySelector('div[class="top-weapons__weapons"] > div:nth-child(3) > div:nth-child(2) > div > span').innerText;
+			let weapon3Body = document.querySelector(
+				'div[class="top-weapons__weapons"] > div:nth-child(3) > div:nth-child(2) > div > span:nth-child(2)'
+			).innerText;
+			let weapon3Legs = document.querySelector(
+				'div[class="top-weapons__weapons"] > div:nth-child(3) > div:nth-child(2) > div > span:nth-child(3)'
+			).innerText;
+			let weapon3Kills = document.querySelector(
+				'div[class="top-weapons__weapons"] > div:nth-child(3) > div:nth-child(3) > span:nth-child(2)'
+			).innerText;
 
-		return {
-			[weapon1]: {
-				Kills: weapon1Kills,
-				'Headshot%': weapon1Hs,
-				'Bodyshot%': weapon1Body,
-				'Legshot%': weapon1Legs,
-			},
-			[weapon2]: {
-				Kills: weapon2Kills,
-				'Headshot%': weapon2Hs,
-				'Bodyshot%': weapon2Body,
-				'Legshot%': weapon2Legs,
-			},
-			[weapon3]: {
-				Kills: weapon3Kills,
-				'Headshot%': weapon3Hs,
-				'Bodyshot%': weapon3Body,
-				'Legshot%': weapon3Legs,
-			},
-		};
-	});
+			return {
+				[weapon1]: {
+					Kills: weapon1Kills,
+					'Headshot%': weapon1Hs,
+					'Bodyshot%': weapon1Body,
+					'Legshot%': weapon1Legs,
+				},
+				[weapon2]: {
+					Kills: weapon2Kills,
+					'Headshot%': weapon2Hs,
+					'Bodyshot%': weapon2Body,
+					'Legshot%': weapon2Legs,
+				},
+				[weapon3]: {
+					Kills: weapon3Kills,
+					'Headshot%': weapon3Hs,
+					'Bodyshot%': weapon3Body,
+					'Legshot%': weapon3Legs,
+				},
+			};
+		});
 
-	await browser.close();
+		await browser.close();
 
-	return results;
+		return results;
+	} catch (err) {
+		console.log(err);
+		await browser.close();
+		return 'Error';
+	} finally {
+		await browser.close();
+	}
 };
 
 exports.getValStats = getValStats;
