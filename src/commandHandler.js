@@ -1,9 +1,9 @@
 const {handleFnRequest} = require('./commands/fort');
 const {handleValRequest} = require('./commands/val');
 
-const {getValId, getFnId} = require('./api');
+const {getValId, getFnId, hasValidFnId, hasValidValId} = require('./api');
 const {handleRegularRequest} = require('./commands/regularCommands');
-const {fnRegisterMsg, valRegisterMsg} = require('./helper/constants');
+const {fnRegisterMsg, valRegisterMsg, fnTaggedIsNotRegisteredMsg, valTaggedIsNotRegisteredMsg} = require('./helper/constants');
 
 const PREFIX = '-';
 
@@ -28,10 +28,17 @@ module.exports = async function (message) {
 			message.channel.send(fnRegisterMsg);
 			return;
 		}
-		realIgn = realIgn.startsWith('<') ? await getFnId(realIgn.substring(3, realIgn.length - 1)) : realIgn;
+		if (realIgn.startsWith('<')) {
+			let substr = realIgn.substring(3, realIgn.length - 1);
+			if (await hasValidFnId(substr)) {
+				realIgn = await getFnId(substr);
+			} else {
+				realIgn = '';
+			}
+		}
 
 		if (realIgn === '') {
-			message.channel.send(fnRegisterMsg);
+			message.channel.send(fnTaggedIsNotRegisteredMsg);
 			return;
 		}
 
@@ -47,9 +54,22 @@ module.exports = async function (message) {
 			return;
 		}
 		realIgn = ign === '' ? await getValId(message.author.id) : ign;
-		realIgn = realIgn.startsWith('<') ? await getValId(realIgn.substring(3, realIgn.length - 1)) : realIgn;
 		if (realIgn === '') {
 			message.channel.send(valRegisterMsg);
+			return;
+		}
+
+		if (realIgn.startsWith('<')) {
+			let substr = realIgn.substring(3, realIgn.length - 1);
+			if (await hasValidValId(substr)) {
+				realIgn = await getValId(substr);
+			} else {
+				realIgn = '';
+			}
+		}
+
+		if (realIgn === '') {
+			message.channel.send(valTaggedIsNotRegisteredMsg);
 			return;
 		}
 

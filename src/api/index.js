@@ -1,4 +1,6 @@
 const admin = require('firebase-admin');
+const {getFnStats} = require('../scrapers/fnScraper');
+const {getValStats} = require('../scrapers/valScraper');
 const db = admin.firestore();
 
 const doesUserExist = async (id, member) => {
@@ -62,6 +64,28 @@ const getFnId = async (id) => {
 	return user.data() === undefined ? '' : user.data().fn_id;
 };
 
+const hasValidValId = async (id) => {
+	const user = await db.collection('discord-users').doc(id).get();
+	let fnId = user.data() === undefined ? '' : user.data().val_id;
+
+	return (await getValStats(fnId)) !== undefined;
+};
+
+const hasValidFnId = async (id) => {
+	const user = await db.collection('discord-users').doc(id).get();
+	let fnId = user.data() === undefined ? '' : user.data().fn_id;
+
+	let stats = await getFnStats(fnId);
+	if (stats === undefined) {
+		return false;
+	}
+	if (stats.status === 202) {
+		return false;
+	}
+
+	return true;
+};
+
 const updateUserInfo = async (info, id) => {
 	const res = await db.collection('discord-users').doc(id).update({
 		val_id: info.valId,
@@ -76,3 +100,5 @@ exports.getUserInfo = getUserInfo;
 exports.updateUserInfo = updateUserInfo;
 exports.getValId = getValId;
 exports.getFnId = getFnId;
+exports.hasValidValId = hasValidValId;
+exports.hasValidFnId = hasValidFnId;

@@ -7,6 +7,9 @@ const valRegisterMsg =
 	"You aren't registered. Use `-register` to register or give me an account by typing `-val <command> <ign>/@DiscordUser`\n\nValid Valorant commands:\n" +
 	valCommands;
 
+const valTaggedIsNotRegisteredMsg =
+	'This user is not registered or does not have a valid Valorant account on their profile. They can use `-register` to register.';
+
 const fnCommands = `\`-fn stats\`, \`-fn pr\`, \`-fn earnings\`, \`-fn events\`, \`-fn tracker\``;
 
 const fnHelpMsg = `
@@ -15,9 +18,13 @@ const fnHelpMsg = `
 
 const fnRegisterMsg = `You aren't registered. Use \`-register\` to register or give me an account by typing \`-fn <command> <ign>/@DiscordUser\`\n\nValid Fortnite commands: \n${fnCommands}`;
 
+const fnTaggedIsNotRegisteredMsg = `This user is not registered or does not have a valid Fortnite account on their profile. They can use \`-register\` to register.`;
+
 exports.valCommands = valCommands;
 exports.valHelpMsg = valHelpMsg;
 exports.valRegisterMsg = valRegisterMsg;
+exports.valTaggedIsNotRegisteredMsg = valTaggedIsNotRegisteredMsg;
 exports.fnCommands = fnCommands;
 exports.fnHelpMsg = fnHelpMsg;
 exports.fnRegisterMsg = fnRegisterMsg;
+exports.fnTaggedIsNotRegisteredMsg = fnTaggedIsNotRegisteredMsg;
