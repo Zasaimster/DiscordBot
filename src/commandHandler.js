@@ -24,6 +24,11 @@ module.exports = async function (message) {
 			return;
 		}
 		realIgn = ign === '' ? await getFnId(message.author.id) : ign;
+		if (realIgn === '') {
+			message.channel.send(fnRegisterMsg);
+			return;
+		}
+		realIgn = realIgn.startsWith('<') ? await getFnId(realIgn.substring(3, realIgn.length - 1)) : realIgn;
 
 		if (realIgn === '') {
 			message.channel.send(fnRegisterMsg);
@@ -41,12 +46,12 @@ module.exports = async function (message) {
 			message.channel.send('Use `-val help` to get a list of available commands');
 			return;
 		}
-		realIgn = ign === '' ? await getFnId(message.author.id) : ign;
+		realIgn = ign === '' ? await getValId(message.author.id) : ign;
+		realIgn = realIgn.startsWith('<') ? await getValId(realIgn.substring(3, realIgn.length - 1)) : realIgn;
 		if (realIgn === '') {
 			message.channel.send(valRegisterMsg);
 			return;
 		}
-		realIgn = ign === '' ? await getValId(message.author.id) : ign;
 
 		const msg = await handleValRequest(getPhrase.toLowerCase(), realIgn, message.author.username);
 		message.channel.send(msg);
