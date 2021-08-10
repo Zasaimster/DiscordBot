@@ -1,7 +1,7 @@
 const {getValStats, getValLast20Stats, getValAgentStats, getLast20Accuracy, getTopWeapons, getTopWeaponsInfo} = require('../scrapers/valScraper');
-const {convertCommandToValidValUser, getSpaces} = require('../helper/functions');
+const {convertCommandToValidValUser} = require('../helper/functions');
 const {MessageEmbed} = require('discord.js');
-const {valCommands, valHelpMsg} = require('../helper/constants');
+const {valHelpMsg} = require('../helper/constants');
 
 const handleValRequest = async (cmd, ign, author) => {
 	if (cmd === 'help') {
@@ -375,17 +375,6 @@ const getTop3AgentInfo = (stats) => {
 	}
 
 	return res;
-};
-
-const embedStats = (ign, author) => {
-	const statsEmbed = new MessageEmbed()
-		.setColor('#ff4040')
-		.setTitle(`${ign}'s Fortnite Stats`)
-		.setURL(`https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(encodeURI(ign))}/overview`)
-		//.addFields(getFieldsStatsInfo(data))
-		.setFooter(`${author}`, 'https://i.imgur.com/rywd92h.jpeg');
-
-	return statsEmbed;
 };
 
 const embedSingleInfo = (title, stat, ign, author) => {

@@ -1,4 +1,4 @@
-const {convertNumberToStringWithCommas, prettifyFNStats, convertCommandToValidValUser} = require('../helper/functions');
+const {convertNumberToStringWithCommas} = require('../helper/functions');
 const {getFnStats} = require('../scrapers/fnScraper');
 const {MessageEmbed} = require('discord.js');
 const {fnHelpMsg} = require('../helper/constants');
