@@ -7,7 +7,9 @@ const handleValRequest = async (cmd, ign, author) => {
 	if (cmd === 'help') {
 		return valHelpMsg;
 	}
-	if ((await getValStats(ign)) === undefined) {
+	let test = await getValStats(ign);
+	if (test === undefined) {
+		console.log(test);
 		return `There was an error getting this account's information. It's either not a valid account or it's private and needs to be made public.\n\nTo find out more, go to https://tracker.gg/valorant/profile/riot/${convertCommandToValidValUser(
 			encodeURI(ign)
 		)}/overview `;
@@ -17,10 +19,6 @@ const handleValRequest = async (cmd, ign, author) => {
 		//current rank, peak rank, kd, wins and losses, adr, kd, hs%, win%, kills, hs, deaths, assists, score/round, kill/rnd, clutches, highest kill game
 		const res = await getValStats(ign);
 		const stats = res.data.data[0].stats;
-
-		if (res.status !== 200) {
-			return res.status;
-		}
 
 		let rank, peakRank;
 		const tierName = stats.rank.metadata.tierName;
@@ -70,7 +68,7 @@ const handleValRequest = async (cmd, ign, author) => {
 
 		//embedInfo[14].inline;
 
-		console.log(`overall stats: ${embedInfo}`);
+		console.log('overall stats:', embedInfo);
 
 		return embedSingleInfo(`${ign}'s Comp Stats`, embedInfo, ign, author);
 	}
@@ -78,11 +76,7 @@ const handleValRequest = async (cmd, ign, author) => {
 		const res = await getValStats(ign);
 		const stats = res.data.data[0].stats;
 
-		if (res.status !== 200) {
-			return res.status;
-		}
-
-		console.log(`DPM: ${stats.damagePerRound.displayValue}`);
+		console.log(`DPM: `, stats.damagePerRound.displayValue);
 
 		return embedSingleInfo(`${ign}'s Damage Per Round`, {name: 'Damage Per Round', value: `${stats.damagePerRound.displayValue}`}, ign, author);
 	}
@@ -90,11 +84,7 @@ const handleValRequest = async (cmd, ign, author) => {
 		const res = await getValStats(ign);
 		const stats = res.data.data[0].stats;
 
-		if (res.status !== 200) {
-			return res.status;
-		}
-
-		console.log(`KD: ${stats.kdRatio.displayValue}`);
+		console.log('KD: ', stats.kDRatio.displayValue);
 
 		return embedSingleInfo(`${ign}'s KD Ratio`, {name: 'K/D Ratio', value: `${stats.kDRatio.displayValue}`}, ign, author);
 	}
@@ -102,18 +92,14 @@ const handleValRequest = async (cmd, ign, author) => {
 		const res = await getValStats(ign);
 		const stats = res.data.data[0].stats;
 
-		if (res.status !== 200) {
-			return res.status;
-		}
-
-		console.log(`KAD: ${stats.kDRatio.displayValue}`);
+		console.log('KAD: ', stats.kADRatio.displayValue);
 
 		return embedSingleInfo(`${ign}'s KAD Ratio`, {name: 'KAD Ratio', value: `${stats.kADRatio.displayValue}`}, ign, author);
 	}
 	if (cmd === 'last20acc') {
 		let info = getEmbedInfo(await getLast20Accuracy(ign));
 
-		console.log(`last 20 accuracy: ${info}`);
+		console.log('last 20 accuracy: ', info);
 
 		return embedSingleInfo(`${ign}'s Recent Accuracy`, info, ign, author);
 	}
@@ -121,13 +107,9 @@ const handleValRequest = async (cmd, ign, author) => {
 		const res = await getValLast20Stats(ign);
 		const matches = res.data.data.matches;
 
-		if (res.status !== 200) {
-			return res.status;
-		}
-
 		let embedInfo = getEmbedInfo(getLast20Info(matches));
 
-		console.log(`last 20 info: ${embedInfo}`);
+		console.log('last 20 info: ', embedInfo);
 
 		return embedSingleInfo(`${ign}'s Last 20 Matches`, embedInfo, ign, author);
 	}
@@ -135,11 +117,7 @@ const handleValRequest = async (cmd, ign, author) => {
 		const res = await getValStats(ign);
 		const stats = res.data.data[0].stats;
 
-		if (res.status !== 200) {
-			return res.status;
-		}
-
-		console.log(`hs%: ${stats.headshotsPercentage.displayValue}`);
+		console.log('hs%: ', stats.headshotsPercentage.displayValue);
 
 		return embedSingleInfo(
 			`${ign}'s Headshot Percentage`,
@@ -152,37 +130,25 @@ const handleValRequest = async (cmd, ign, author) => {
 		const res = await getValStats(ign);
 		const stats = res.data.data[0].stats;
 
-		if (res.status !== 200) {
-			return res.status;
-		}
-
-		console.log(`win%: ${stats.matchesWinPct.displayValue}`);
+		console.log('win%: ', stats.matchesWinPct.displayValue);
 		return embedSingleInfo(`${ign}'s Win Percentage`, {name: 'Win %', value: `${stats.matchesWinPct.displayValue}`}, ign, author);
 	}
 	if (cmd === 'topagentinfo') {
 		const res = await getValAgentStats(ign);
 		const stats = res.data.data.segments;
 
-		if (res.status !== 200) {
-			return res.status;
-		}
-
 		let embedInfo = getEmbedInfo(getTop3AgentInfo(stats)[0]);
 
-		console.log(`Best agent: ${embedInfo}`);
+		console.log('Best agent: ', embedInfo);
 		return embedSingleInfo(`${ign}'s Top Agent`, embedInfo, ign, author);
 	}
 	if (cmd === 'top2agentinfo') {
 		const res = await getValAgentStats(ign);
 		const stats = res.data.data.segments;
 
-		if (res.status !== 200) {
-			return res.status;
-		}
-
 		let embedInfo = getEmbedInfo(getTop3AgentInfo(stats)[1]);
 
-		console.log(`2nd best agent: ${embedInfo}`);
+		console.log('2nd best agent: ', embedInfo);
 
 		return embedSingleInfo(`${ign}'s Top Agent`, embedInfo, ign, author);
 	}
@@ -190,34 +156,22 @@ const handleValRequest = async (cmd, ign, author) => {
 		const res = await getValAgentStats(ign);
 		const stats = res.data.data.segments;
 
-		if (res.status !== 200) {
-			return res.status;
-		}
-
 		let embedInfo = getEmbedInfo(getTop3AgentInfo(stats)[2]);
 
-		console.log(`3rd best agent: ${embedInfo}`);
+		console.log('3rd best agent: ', embedInfo);
 		return embedSingleInfo(`${ign}'s Top Agent`, embedInfo, ign, author);
 	}
 	if (cmd === 'topagent') {
 		const res = await getValAgentStats(ign);
 		const stats = res.data.data.segments;
 
-		if (res.status !== 200) {
-			return res.status;
-		}
-
 		let info = getTop3AgentInfo(stats)[0];
-		console.log(`top agent: ${info.Name}`);
+		console.log('top agent: ', info.Name);
 		return embedSingleInfo(`${ign}'s Top Agent`, {name: `${info.Name}`, value: '\u200B'}, ign, author);
 	}
 	if (cmd === 'top3agents') {
 		const res = await getValAgentStats(ign);
 		const stats = res.data.data.segments;
-
-		if (res.status !== 200) {
-			return res.status;
-		}
 
 		let info = getTop3AgentInfo(stats);
 		let embedInfo = [];
@@ -225,7 +179,7 @@ const handleValRequest = async (cmd, ign, author) => {
 		embedInfo.push({name: '#2', value: `${info[1].Name}`});
 		embedInfo.push({name: '#3', value: `${info[2].Name}`});
 
-		console.log(`top 3 agent info: ${embedInfo}`);
+		console.log('top 3 agent info: ', embedInfo);
 		return embedSingleInfo(`${ign}'s Top 3 Agents`, embedInfo, ign, author);
 	}
 	if (cmd === 'tracker') {
@@ -234,22 +188,18 @@ const handleValRequest = async (cmd, ign, author) => {
 	if (cmd === 'topweapons') {
 		let info = getEmbedInfo(await getTopWeapons(ign));
 
-		console.log(`top weapons: ${info}`);
+		console.log('top weapons: ', info);
 		return embedSingleInfo(`${ign}'s Top Weapons`, info, ign, author);
 	}
 	if (cmd === 'topweaponsinfo') {
 		let info = getTopWeaponsEmbedInfo(await getTopWeaponsInfo(ign));
 
-		console.log(`top weapons info: ${info}`);
+		console.log('top weapons info: ', info);
 		return embedSingleInfo(`${ign}'s Top Weapons Info`, info, ign, author);
 	}
 	if (cmd === 'rank') {
 		const res = await getValStats(ign);
 		const stats = res.data.data[0].stats;
-
-		if (res.status !== 200) {
-			return res.status;
-		}
 
 		let toDisplay;
 		const tierName = stats.rank.metadata.tierName;
@@ -258,17 +208,13 @@ const handleValRequest = async (cmd, ign, author) => {
 		} else {
 			toDisplay = stats.rank.displayValue;
 		}
-		console.log(`rank: ${toDisplay}`);
+		console.log('rank: ', toDisplay);
 		return embedSingleInfo(`${ign}'s Current Rank`, {name: 'Rank', value: `${toDisplay}`}, ign, author);
 	}
 
 	if (cmd === 'peakrank') {
 		const res = await getValStats(ign);
 		const stats = res.data.data[0].stats;
-
-		if (res.status !== 200) {
-			return res.status;
-		}
 
 		let toDisplay;
 		const tierName = stats.peakRank.metadata.tierName;
@@ -278,7 +224,7 @@ const handleValRequest = async (cmd, ign, author) => {
 			toDisplay = `${stats.peakRank.displayValue}, ${stats.peakRank.metadata.actName}`;
 		}
 
-		console.log(`peak rank: ${toDisplay}`);
+		console.log('peak rank: ', toDisplay);
 		return embedSingleInfo(`${ign}'s Peak Rank`, {name: 'Peak Rank', value: `${toDisplay}`}, ign, author);
 	}
 
@@ -286,11 +232,7 @@ const handleValRequest = async (cmd, ign, author) => {
 		const res = await getValStats(ign);
 		const stats = res.data.data[0].stats;
 
-		if (res.status !== 200) {
-			return res.status;
-		}
-
-		console.log(`time played: ${stats.timePlayed.displayValue}`);
+		console.log('time played: ', stats.timePlayed.displayValue);
 
 		return embedSingleInfo(`${ign}'s Comp Playtime`, {name: 'Time Played', value: `${stats.timePlayed.displayValue}`}, ign, author);
 	}
@@ -299,11 +241,7 @@ const handleValRequest = async (cmd, ign, author) => {
 		const res = await getValStats(ign);
 		const stats = res.data.data[0].stats;
 
-		if (res.status !== 200) {
-			return res.status;
-		}
-
-		console.log(`matches played: ${stats.matchesPlayed.displayValue}`);
+		console.log('matches played: ', stats.matchesPlayed.displayValue);
 
 		return embedSingleInfo(`${ign}'s Comp Matches Played`, {name: 'Matches Played', value: `${stats.matchesPlayed.displayValue}`}, ign, author);
 	}

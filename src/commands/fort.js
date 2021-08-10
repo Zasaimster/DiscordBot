@@ -24,16 +24,16 @@ const handleFnRequest = async (cmd, ign, author) => {
 
 	switch (cmd) {
 		case 'stats':
-			console.log(`Overall stats: ${stats.data}`);
+			console.log('Overall stats: ', stats.data);
 			return embedStats(stats.data, ign, author);
 		case 'pr':
-			console.log(`PR: ${stats.data.points}`);
+			console.log('PR: ', stats.data.points);
 			return embedSingleInfo({name: 'PR', value: `${convertNumberToStringWithCommas(stats.data.points)}`}, stats.data, ign, author);
 		case 'earnings':
-			console.log(`Earnings: ${stats.data.cashPrize}`);
+			console.log('Earnings: ', stats.data.cashPrize);
 			return embedSingleInfo({name: 'Earnings', value: `$${stats.data.cashPrize}`}, stats.data, ign, author);
 		case 'events':
-			console.log(`Events Played: ${stats.data.events}`);
+			console.log('Events Played: ', stats.data.events);
 			return embedSingleInfo({name: 'Events', value: `${stats.data.events}`}, stats.data, ign, author);
 		case 'tracker':
 			return `https://fortnitetracker.com/profile/all/${encodeURI(ign)}/events`;
