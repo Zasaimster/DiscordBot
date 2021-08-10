@@ -24,7 +24,7 @@ const handleValRequest = async (cmd, ign, author) => {
 		const tierName = stats.rank.metadata.tierName;
 		if (tierName.startsWith('Immortal') || tierName.startsWith('Radiant')) {
 			rank = tierName.substr(0, tierName.indexOf(' ')) + ' ' + stats.rank.displayValue + 'RR';
-			peakRank = tierName.substr(0, tierName.indexOf(' ')) + ' ' + stats.rank.displayValue + 'RR' + ', ' + stats.peakRank.metadata.actName;
+			peakRank = tierName.substr(0, tierName.indexOf(' ')) + ' ' + stats.peakRank.displayValue + 'RR' + ', ' + stats.peakRank.metadata.actName;
 		} else {
 			rank = stats.rank.displayValue;
 			peakRank = `${stats.peakRank.displayValue}, ${stats.peakRank.metadata.actName}`;
