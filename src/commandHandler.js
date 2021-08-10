@@ -1,9 +1,9 @@
 const {handleFnRequest} = require('./commands/fort');
 const {handleValRequest} = require('./commands/val');
 
-const {doesUserExist, getValId, getFnId} = require('./api');
-const {val} = require('cheerio/lib/api/attributes');
+const {getValId, getFnId} = require('./api');
 const {handleRegularRequest} = require('./commands/regularCommands');
+const {fnRegisterMsg, valRegisterMsg} = require('./helper/constants');
 
 const PREFIX = '-';
 
@@ -26,9 +26,7 @@ module.exports = async function (message) {
 		realIgn = ign === '' ? await getFnId(message.author.id) : ign;
 
 		if (realIgn === '') {
-			message.channel.send(
-				"You aren't registered. Use `-register` to register or give me an account by typing `-fn <command> <ign>`\n\nValid Fortnite commands: \n`-fn stats`, `-fn pr`, `-fn earnings`, `-fn events`, `-fn tracker`"
-			);
+			message.channel.send(fnRegisterMsg);
 			return;
 		}
 
@@ -45,12 +43,7 @@ module.exports = async function (message) {
 		}
 		realIgn = ign === '' ? await getFnId(message.author.id) : ign;
 		if (realIgn === '') {
-			let valCommands =
-				'`-val stats`, `-val damagePerRound`, `-val kd`, `-val kad`, `-val last20acc`, `-val last20`, `-val hs%`, `-val win%`, `-val topAgentInfo`, `-val top2AgentInfo`, `-val top3AgentInfo`, `-val topAgent`, `-val top3Agents`, `-val tracker`, `-val topWeapons`, `-val topWeaponsInfo`, `-val rank`, `-val peakRank`, `-val playtime`, `-val matchesPlayed` ';
-			message.channel.send(
-				"You aren't registered. Use `-register` to register or give me an account by typing `-val <command> <ign>`\n\nValid Valorant commands:\n" +
-					valCommands
-			);
+			message.channel.send(valRegisterMsg);
 			return;
 		}
 		realIgn = ign === '' ? await getValId(message.author.id) : ign;

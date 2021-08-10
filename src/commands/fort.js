@@ -1,12 +1,11 @@
 const {convertNumberToStringWithCommas, prettifyFNStats, convertCommandToValidValUser} = require('../helper/functions');
 const {getFnStats} = require('../scrapers/fnScraper');
 const {MessageEmbed} = require('discord.js');
+const {fnHelpMsg} = require('../helper/constants');
 
 const handleFnRequest = async (cmd, ign, author) => {
 	if (cmd === 'help') {
-		return `
-			You can get Fortnite stats by registering your account with \`-register\` then using \`-fn <command>\` or by using \`-fn <command> <ign>\` (replace the brackets with a proper command/ign).\n\nValid Fortnite commands: \n\`-fn stats\`, \`-fn pr\`, \`-fn earnings\`, \`-fn events\`, \`-fn tracker\`
-		`;
+		return fnHelpMsg;
 	}
 
 	const stats = await getFnStats(ign);
