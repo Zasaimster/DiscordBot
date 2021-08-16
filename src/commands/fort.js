@@ -44,9 +44,12 @@ const handleFnRequest = async (cmd, ign, author) => {
 
 const embedStats = (data, ign, author) => {
 	const statsEmbed = new MessageEmbed()
+
 		.setColor('#006eff')
+
 		.setTitle(`${data.name}'s Fortnite Stats`)
 		.setURL(`https://fortnitetracker.com/profile/all/${encodeURI(ign)}/events`)
+
 		.addFields(getFieldsStatsInfo(data))
 		.setFooter(`${author}`, 'https://i.imgur.com/rywd92h.jpeg');
 
